@@ -55,6 +55,7 @@
     <modules>
         <module>appclient</module>
         <module>batch-jberet</module>
+        <module>bean-validation</module>
         <module>boms/common-ee</module>
         <module>boms/common-expansion</module>
         <module>boms/legacy-ee</module>
@@ -111,6 +112,9 @@
         <module>testsuite</module>
         <module>transactions</module>
         <module>undertow</module>
+        <module>webservices</module>
+        <module>web-common</module>
+        <module>xts</module>
     </modules>
 
     <scm>
@@ -290,11 +294,11 @@
          -->
         <version.asciidoctor.plugin>2.2.2</version.asciidoctor.plugin>
         <version.org.jacoco>0.8.7</version.org.jacoco>
-        <version.org.jboss.galleon>5.0.5.Final</version.org.jboss.galleon>
+        <version.org.jboss.galleon>5.0.7.Final</version.org.jboss.galleon>
         <version.org.wildfly.build-tools>1.2.12.Final</version.org.wildfly.build-tools>
         <version.org.wildfly.checkstyle-config>1.0.8.Final</version.org.wildfly.checkstyle-config>
         <version.org.wildfly.common>1.6.0.Final</version.org.wildfly.common>
-        <version.org.wildfly.galleon-plugins>6.2.0.Final</version.org.wildfly.galleon-plugins>
+        <version.org.wildfly.galleon-plugins>6.2.2.Final</version.org.wildfly.galleon-plugins>
         <version.org.wildfly.jar.plugin>8.1.0.Final</version.org.wildfly.jar.plugin>
         <version.org.wildfly.maven.plugins>2.2.0.Final</version.org.wildfly.maven.plugins>
         <version.org.wildfly.plugin>3.0.2.Final</version.org.wildfly.plugin>
@@ -370,7 +374,7 @@
         <version.io.grpc>1.38.1</version.io.grpc>
         <version.io.jaegertracing>1.6.0</version.io.jaegertracing>
         <version.io.micrometer>1.9.3</version.io.micrometer>
-        <version.io.netty>4.1.84.Final</version.io.netty>
+        <version.io.netty>4.1.86.Final</version.io.netty>
         <version.io.opentelemetry.opentelemetry>1.12.0</version.io.opentelemetry.opentelemetry>
         <version.io.opentracing>0.33.0</version.io.opentracing>
         <version.io.opentracing.concurrent>0.4.0</version.io.opentracing.concurrent>
@@ -399,7 +403,7 @@
         <version.io.smallrye.smallrye-mutiny-vertx>2.26.0</version.io.smallrye.smallrye-mutiny-vertx>
         <version.io.smallrye.smallrye-opentracing>3.0.0</version.io.smallrye.smallrye-opentracing>
         <version.io.smallrye.smallrye-reactive-messaging>4.1.0</version.io.smallrye.smallrye-reactive-messaging>
-        <version.io.undertow.jastow>2.2.4.Final</version.io.undertow.jastow>
+        <version.io.undertow.jastow>2.2.5.Final</version.io.undertow.jastow>
         <version.io.vertx.vertx>4.3.4</version.io.vertx.vertx>
         <version.io.vertx.vertx-kafka-client>${version.io.vertx.vertx}</version.io.vertx.vertx-kafka-client>
         <version.jakarta.activation.jakarta.activation-api>2.1.1.jbossorg-1</version.jakarta.activation.jakarta.activation-api>
@@ -428,7 +432,6 @@
         <version.jakarta.servlet.jsp.jstl.jakarta-servlet-jsp-jstl-api>3.0.0</version.jakarta.servlet.jsp.jstl.jakarta-servlet-jsp-jstl-api>
         <legacy.version.jakarta.transaction>2.0.1</legacy.version.jakarta.transaction>
         <version.jakarta.transaction.jakarta-transaction-api>2.0.1</version.jakarta.transaction.jakarta-transaction-api>
-        <version.jakarta.validation>2.0.2</version.jakarta.validation>
         <version.jakarta.validation.jakarta-validation-api>3.0.2</version.jakarta.validation.jakarta-validation-api>
         <version.jakarta.websocket.jakarta-websocket-api>2.1.0-jbossorg-2</version.jakarta.websocket.jakarta-websocket-api>
         <version.jakarta.ws.rs.jakarta-ws-rs-api>3.1.0</version.jakarta.ws.rs.jakarta-ws-rs-api>
@@ -466,6 +469,7 @@
         <version.org.bitbucket.jose4j>0.8.0</version.org.bitbucket.jose4j>
         <version.org.bytebuddy>1.12.18</version.org.bytebuddy>
         <version.org.cryptacular>1.2.5</version.org.cryptacular>
+        <version.org.codehaus.plexus.plexus-utils>3.5.0</version.org.codehaus.plexus.plexus-utils>
         <version.org.codehaus.woodstox.stax2-api>4.2.1</version.org.codehaus.woodstox.stax2-api>
         <version.org.codehaus.woodstox.woodstox-core>6.4.0</version.org.codehaus.woodstox.woodstox-core>
         <version.org.eclipse.angus.angus-activation>1.0.0</version.org.eclipse.angus.angus-activation>
@@ -507,7 +511,6 @@
         <legacy.version.org.hibernate.commons.annotations>5.0.5.Final</legacy.version.org.hibernate.commons.annotations>
         <version.org.hibernate.commons.annotations>6.0.1.Final</version.org.hibernate.commons.annotations>
         <version.org.hibernate.search>6.1.7.Final</version.org.hibernate.search>
-        <legacy.version.org.hibernate.validator>6.0.23.Final</legacy.version.org.hibernate.validator>
         <version.org.hibernate.validator>8.0.0.Final</version.org.hibernate.validator>
         <version.org.hornetq>2.4.9.Final</version.org.hornetq>
         <version.org.infinispan>14.0.3.Final</version.org.infinispan>
@@ -518,7 +521,7 @@
         <version.org.jboss.activemq.artemis.integration>1.0.7</version.org.jboss.activemq.artemis.integration>
         <version.org.jboss.arquillian.core>1.7.0.Alpha13</version.org.jboss.arquillian.core>
         <version.org.jboss.common.jboss-common-beans>2.0.1.Final</version.org.jboss.common.jboss-common-beans>
-        <legacy.version.org.jboss.ejb-client>4.0.49.Final</legacy.version.org.jboss.ejb-client>
+        <legacy.version.org.jboss.ejb-client>4.0.50.Final</legacy.version.org.jboss.ejb-client>
         <version.org.jboss.ejb-client>5.0.1.Final</version.org.jboss.ejb-client>
         <version.org.jboss.ejb-client-legacy>3.0.3.Final</version.org.jboss.ejb-client-legacy>
         <version.org.jboss.ejb3.ext-api>2.3.0.Final</version.org.jboss.ejb3.ext-api>
@@ -531,7 +534,7 @@
         <version.org.jboss.jboss-transaction-spi>7.6.1.Final</version.org.jboss.jboss-transaction-spi>
         <!-- Only used for testing -->
         <version.org.jboss.logmanager.commons-logging-jboss-logmanager>1.0.3.Final</version.org.jboss.logmanager.commons-logging-jboss-logmanager>
-        <version.org.jboss.metadata>15.2.0.Final</version.org.jboss.metadata>
+        <version.org.jboss.metadata>15.3.0.Final</version.org.jboss.metadata>
         <version.org.jboss.mod_cluster>2.0.1.Final</version.org.jboss.mod_cluster>
         <version.org.jboss.narayana>5.13.0.Final</version.org.jboss.narayana>
         <version.org.jboss.openjdk-orb>8.1.9.Final</version.org.jboss.openjdk-orb>
@@ -583,29 +586,28 @@
         <version.org.jboss.xnio.netty.netty-xnio-transport>0.1.9.Final</version.org.jboss.xnio.netty.netty-xnio-transport>
         <version.org.jctools.jctools-core>2.1.2</version.org.jctools.jctools-core>
         <version.org.jetbrains.kotlin>1.7.10</version.org.jetbrains.kotlin>
-        <version.org.jgroups>5.2.10.Final</version.org.jgroups>
+        <version.org.jgroups>5.2.11.Final</version.org.jgroups>
         <version.org.jgroups.aws>2.0.1.Final</version.org.jgroups.aws>
         <version.org.jgroups.azure>2.0.2.Final</version.org.jgroups.azure>
         <version.org.jgroups.kubernetes>2.0.1.Final</version.org.jgroups.kubernetes>
         <version.org.jipijapa>1.0.1.Final</version.org.jipijapa>
         <version.org.jvnet.staxex>2.1.0</version.org.jvnet.staxex>
         <version.org.keycloak>18.0.2</version.org.keycloak>
+        <version.org.keycloak.keycloak-saml-wildfly-subsystem>18.0.2</version.org.keycloak.keycloak-saml-wildfly-subsystem>
         <version.org.kohsuke.metainf-services>1.8</version.org.kohsuke.metainf-services>
         <version.org.latencyutils>2.0.3</version.org.latencyutils>
         <version.org.opensaml.opensaml>4.2.0</version.org.opensaml.opensaml>
         <version.org.ow2.asm>9.4</version.org.ow2.asm>
         <version.org.reactivestreams>1.0.4</version.org.reactivestreams>
-        <version.org.syslog4j>0.9.30</version.org.syslog4j>
-        <!-- Test dependency -->
-        <version.org.keycloak.keycloak-saml-wildfly-subsystem>18.0.2</version.org.keycloak.keycloak-saml-wildfly-subsystem>
         <version.org.springframework.kafka>2.9.1</version.org.springframework.kafka>
+        <version.org.syslog4j>0.9.30</version.org.syslog4j>
         <version.org.testcontainers>1.16.0</version.org.testcontainers>
         <version.org.testng>7.4.0</version.org.testng>
         <version.org.wildfly.arquillian>5.0.0.Alpha6</version.org.wildfly.arquillian>
         <version.org.wildfly.core>20.0.0.Beta5-SNAPSHOT</version.org.wildfly.core>
         <version.org.wildfly.extras.creaper>1.6.2</version.org.wildfly.extras.creaper>
         <legacy.version.org.wildfly.http-client>1.1.15.Final</legacy.version.org.wildfly.http-client>
-        <version.org.wildfly.http-client>2.0.0.Final</version.org.wildfly.http-client>
+        <version.org.wildfly.http-client>2.0.1.Final</version.org.wildfly.http-client>
         <legacy.version.org.wildfly.naming-client>1.0.17.Final</legacy.version.org.wildfly.naming-client>
         <version.org.wildfly.naming-client>2.0.0.Final</version.org.wildfly.naming-client>
         <legacy.version.org.wildfly.security.elytron>1.20.2.Final</legacy.version.org.wildfly.security.elytron>
@@ -1515,6 +1517,13 @@
 
             <!-- Required for testsuite/shared which will later be moved to a test bom (WFLY-17331) -->
             <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-utils</artifactId>
+                <version>${version.org.codehaus.plexus.plexus-utils}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>xom</groupId>
                 <artifactId>xom</artifactId>
                 <version>${version.xom}</version>
@@ -2069,7 +2078,6 @@
                 <checkstyle.skip>true</checkstyle.skip>
                 <enforcer.skip>true</enforcer.skip>
                 <license.skip>true</license.skip>
-                <maven.test.skip>true</maven.test.skip>
             </properties>
             <build>
                 <defaultGoal>clean install</defaultGoal>
@@ -2085,17 +2093,7 @@
             </activation>
             <modules>
                 <!-- TODO once moved to jakarta.* move to main module set-->
-                <module>bean-validation</module>
-                <!-- TODO once moved to jakarta.* move to main module set-->
                 <module>ee</module>
-                <!-- TODO once moved to jakarta.* move to main module set-->
-                <module>rts</module>
-                <!-- TODO once moved to jakarta.* move to main module set-->
-                <module>web-common</module>
-                <!-- TODO once moved to jakarta.* move to main module set-->
-                <module>webservices</module>
-                <!-- TODO once moved to jakarta.* move to main module set-->
-                <module>xts</module>
             </modules>
         </profile>
         <profile>

@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat, Inc., and individual contributors
+ * Copyright 2022, Red Hat, Inc., and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -20,20 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.ee.metadata.property;
+package org.jboss.as.ejb3.security;
 
-import org.jboss.as.server.deployment.DeploymentPhaseContext;
-import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
-import org.jboss.as.server.deployment.DeploymentUnitProcessor;
-import org.jboss.metadata.property.SystemPropertyResolver;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+import org.wildfly.security.auth.server.SecurityDomain;
+import org.wildfly.security.manager.WildFlySecurityManager;
 
 /**
- * @author John Bailey
+ * @author <a href="mailto:fjuma@redhat.com">Farah Juma</a>
  */
-public class SystemPropertyResolverProcessor implements DeploymentUnitProcessor {
-    public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
-        // Always add system property resolver
-        phaseContext.getDeploymentUnit().addToAttachmentList(Attachments.DEPLOYMENT_PROPERTY_RESOLVERS, SystemPropertyResolver.INSTANCE);
-    }
+class IdentityUtil {
 
+    public static SecurityDomain getCurrentSecurityDomain() {
+        if (WildFlySecurityManager.isChecking()) {
+            return AccessController.doPrivileged((PrivilegedAction<SecurityDomain>) SecurityDomain::getCurrent);
+        } else {
+            return SecurityDomain.getCurrent();
+        }
+    }
 }
