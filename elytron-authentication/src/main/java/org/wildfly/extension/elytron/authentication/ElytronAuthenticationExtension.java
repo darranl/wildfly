@@ -71,6 +71,10 @@ public class ElytronAuthenticationExtension implements Extension {
     @Override
     public void initialize(final ExtensionContext context) {
         final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, CURRENT_MODEL_VERSION);
+
+        // Elytron is expected to be used everywhere.
+        subsystem.setHostCapable();
+
         final ManagementResourceRegistration registration = subsystem.registerSubsystemModel(new ElytronAuthenticationSubsystemDefinition());
         registration.registerOperationHandler(GenericSubsystemDescribeHandler.DEFINITION, GenericSubsystemDescribeHandler.INSTANCE);
         subsystem.registerXMLElementWriter(parser);

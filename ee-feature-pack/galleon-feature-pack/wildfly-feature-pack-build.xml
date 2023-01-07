@@ -94,6 +94,7 @@
                 <extension>org.wildfly.extension.discovery</extension>
                 <extension>org.wildfly.extension.ee-security</extension>
                 <extension>org.wildfly.extension.elytron</extension>
+                <extension>org.wildfly.extension.elytron-authentication</extension>
                 <extension>org.wildfly.extension.health</extension>
                 <extension>org.wildfly.extension.io</extension>
                 <extension>org.wildfly.extension.messaging-activemq</extension>
@@ -139,6 +140,7 @@
                 <extension>org.wildfly.extension.discovery</extension>
                 <extension>org.wildfly.extension.ee-security</extension>
                 <extension>org.wildfly.extension.elytron</extension>
+                <extension>org.wildfly.extension.elytron-authentication</extension>
                 <extension>org.wildfly.extension.io</extension>
                 <extension>org.wildfly.extension.messaging-activemq</extension>
                 <extension>org.wildfly.extension.opentelemetry</extension>
@@ -154,6 +156,7 @@
                 <extension>org.wildfly.extension.core-management</extension>
                 <extension>org.wildfly.extension.discovery</extension>
                 <extension>org.wildfly.extension.elytron</extension>
+                <extension>org.wildfly.extension.elytron-authentication</extension>
             </host>
         </extensions>
     </generate-feature-specs>
