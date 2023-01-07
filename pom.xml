@@ -77,6 +77,7 @@
         <module>ee-security</module>
         <module>ee-9</module>
         <module>ejb3</module>
+        <module>elytron-authentication</module>
         <module>elytron-oidc-client</module>
         <module>galleon-pack</module>
         <module>health</module>

@@ -671,6 +671,11 @@
             </dependency>
             <dependency>
                 <groupId>${full.maven.groupId}</groupId>
+                <artifactId>wildfly-elytron-authentication</artifactId>
+                <version>${full.maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${full.maven.groupId}</groupId>
                 <artifactId>wildfly-elytron-oidc-client-subsystem</artifactId>
                 <version>${full.maven.version}</version>
             </dependency>
