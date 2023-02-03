@@ -23,9 +23,11 @@
 package org.wildfly.extension.undertow;
 
 import org.jboss.as.controller.AttributeDefinition;
+import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.PersistentResourceDefinition;
 import org.jboss.as.controller.ReloadRequiredAddStepHandler;
 import org.jboss.as.controller.ReloadRequiredRemoveStepHandler;
+import org.jboss.as.controller.SimpleResourceDefinition;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,12 +38,13 @@ import java.util.List;
  * @author Stuart Douglas
  */
 class WelcomeFileDefinition extends PersistentResourceDefinition {
+    static final PathElement PATH_ELEMENT = PathElement.pathElement(Constants.WELCOME_FILE);
 
-    static final WelcomeFileDefinition INSTANCE = new WelcomeFileDefinition();
-
-    private WelcomeFileDefinition() {
-        super(UndertowExtension.PATH_WELCOME_FILE,
-                UndertowExtension.getResolver(Constants.WELCOME_FILE), new ReloadRequiredAddStepHandler(), new ReloadRequiredRemoveStepHandler());
+    WelcomeFileDefinition() {
+        super(new SimpleResourceDefinition.Parameters(PATH_ELEMENT, UndertowExtension.getResolver(PATH_ELEMENT.getKey()))
+                .setAddHandler(new ReloadRequiredAddStepHandler())
+                .setRemoveHandler(new ReloadRequiredRemoveStepHandler())
+        );
     }
 
     @Override

@@ -928,6 +928,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>protoparser</artifactId>
+                <version>${version.com.squareup.protoparser}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
                 <version>${version.com.squareup.okhttp}</version>
@@ -1539,8 +1545,6 @@
                         <groupId>com.sun.xml.bind</groupId>
                         <artifactId>jaxb-osgi</artifactId>
                     </exclusion>
-                    <!-- TODO remove this exclusion once this supports Jakarta Activation -->
-                    <!-- Superceded by com.sun.activation:jakarta.activation -->
                     <exclusion>
                         <groupId>javax.activation</groupId>
                         <artifactId>activation</artifactId>
@@ -2009,17 +2013,6 @@
             </dependency>
             <dependency>
                 <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-commons</artifactId>
-                <version>${version.org.infinispan}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
                 <artifactId>infinispan-component-annotations</artifactId>
                 <version>${version.org.infinispan}</version>
                 <exclusions>
@@ -2032,17 +2025,6 @@
             <dependency>
                 <groupId>org.infinispan</groupId>
                 <artifactId>infinispan-component-processor</artifactId>
-                <version>${version.org.infinispan}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-core</artifactId>
                 <version>${version.org.infinispan}</version>
                 <exclusions>
                     <exclusion>
@@ -2423,6 +2405,12 @@
                 <artifactId>keycloak-saml-wildfly-subsystem</artifactId>
                 <version>${version.org.keycloak.keycloak-saml-wildfly-subsystem}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.infinispan</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

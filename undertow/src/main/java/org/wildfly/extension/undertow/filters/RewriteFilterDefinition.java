@@ -22,13 +22,15 @@
 
 package org.wildfly.extension.undertow.filters;
 
-import io.undertow.Handlers;
 import io.undertow.attribute.ExchangeAttributes;
-import io.undertow.predicate.Predicate;
-import io.undertow.server.HttpHandler;
+import io.undertow.server.HandlerWrapper;
 import io.undertow.server.handlers.RedirectHandler;
 import io.undertow.server.handlers.SetAttributeHandler;
+
 import org.jboss.as.controller.AttributeDefinition;
+import org.jboss.as.controller.OperationContext;
+import org.jboss.as.controller.OperationFailedException;
+import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.SimpleAttributeDefinitionBuilder;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
@@ -40,7 +42,8 @@ import java.util.Collection;
 /**
  * @author Stuart Douglas
  */
-public class RewriteFilterDefinition extends Filter {
+public class RewriteFilterDefinition extends SimpleFilterDefinition {
+    public static final PathElement PATH_ELEMENT = PathElement.pathElement(Constants.REWRITE);
 
     public static final AttributeDefinition TARGET = new SimpleAttributeDefinitionBuilder("target", ModelType.STRING)
             .setRequired(true)
@@ -56,10 +59,8 @@ public class RewriteFilterDefinition extends Filter {
             .setRestartAllServices()
             .build();
 
-    public static final RewriteFilterDefinition INSTANCE = new RewriteFilterDefinition();
-
-    private RewriteFilterDefinition() {
-        super(Constants.REWRITE);
+    RewriteFilterDefinition() {
+        super(PATH_ELEMENT, RewriteFilterDefinition::createHandlerWrapper);
     }
 
     @Override
@@ -67,27 +68,9 @@ public class RewriteFilterDefinition extends Filter {
         return Arrays.asList(TARGET, REDIRECT);
     }
 
-    @Override
-    public HttpHandler createHttpHandler(Predicate predicate, ModelNode model, HttpHandler next) {
-        String expression = model.get(TARGET.getName()).asString();
-        boolean redirect = model.get(REDIRECT.getName()).asBoolean();
-        if(predicate == null) {
-            return create(next, expression, redirect);
-        } else {
-            return Handlers.predicate(predicate, create(next, expression, redirect), next);
-        }
-    }
-
-    public HttpHandler create(HttpHandler next, String expression, boolean redirect) {
-        if(redirect) {
-            return new RedirectHandler(expression);
-        } else {
-            return new SetAttributeHandler(next, ExchangeAttributes.relativePath(), ExchangeAttributes.parser(getClass().getClassLoader()).parse(expression));
-        }
-    }
-
-    @Override
-    protected Class[] getConstructorSignature() {
-        throw new IllegalStateException(); //should not be used, as the handler is constructed above
+    static HandlerWrapper createHandlerWrapper(OperationContext context, ModelNode model) throws OperationFailedException {
+        String target = TARGET.resolveModelAttribute(context, model).asString();
+        boolean redirect = REDIRECT.resolveModelAttribute(context, model).asBoolean();
+        return next -> redirect ? new RedirectHandler(target) : new SetAttributeHandler(next, ExchangeAttributes.relativePath(), ExchangeAttributes.parser(RewriteFilterDefinition.class.getClassLoader()).parse(target));
     }
 }

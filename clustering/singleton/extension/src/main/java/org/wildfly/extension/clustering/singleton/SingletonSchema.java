@@ -21,19 +21,22 @@
  */
 package org.wildfly.extension.clustering.singleton;
 
+import java.util.List;
 import java.util.Locale;
 
-import org.jboss.as.clustering.controller.Schema;
+import org.jboss.as.clustering.controller.SubsystemSchema;
+import org.jboss.dmr.ModelNode;
+import org.jboss.staxmapper.XMLElementReader;
 
 /**
  * Enumeration of supported subsystem schemas.
  * @author Paul Ferraro
  */
-public enum SingletonSchema implements Schema<SingletonSchema> {
+public enum SingletonSchema implements SubsystemSchema<SingletonSchema> {
 
     VERSION_1_0(1, 0),
     ;
-    public static final SingletonSchema CURRENT = VERSION_1_0;
+    static final SingletonSchema CURRENT = VERSION_1_0;
 
     private final int major;
     private final int minor;
@@ -54,7 +57,12 @@ public enum SingletonSchema implements Schema<SingletonSchema> {
     }
 
     @Override
-    public String getNamespaceUri() {
+    public String getUri() {
         return String.format(Locale.ROOT, "urn:jboss:domain:singleton:%d.%d", this.major, this.minor);
+    }
+
+    @Override
+    public XMLElementReader<List<ModelNode>> get() {
+        return new SingletonXMLReader(this);
     }
 }

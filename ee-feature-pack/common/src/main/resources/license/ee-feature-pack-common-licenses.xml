@@ -156,17 +156,6 @@
       </licenses>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-jaxb-annotations</artifactId>
-      <licenses>
-        <license>
-          <name>Apache License 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-          <distribution>repo</distribution>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
       <groupId>com.fasterxml.jackson.jr</groupId>
       <artifactId>jackson-jr-objects</artifactId>
       <licenses>
@@ -347,6 +336,17 @@
     <dependency>
       <groupId>com.microsoft.azure</groupId>
       <artifactId>azure-storage</artifactId>
+      <licenses>
+        <license>
+          <name>Apache License 2.0</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>protoparser</artifactId>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -2309,7 +2309,7 @@
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-commons</artifactId>
+      <artifactId>infinispan-commons-jakarta</artifactId>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -2331,7 +2331,7 @@
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-core</artifactId>
+      <artifactId>infinispan-core-jakarta</artifactId>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -2420,17 +2420,6 @@
     <dependency>
       <groupId>org.jboss</groupId>
       <artifactId>jboss-ejb-client</artifactId>
-      <licenses>
-        <license>
-          <name>Apache License 2.0</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-          <distribution>repo</distribution>
-        </license>
-      </licenses>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss</groupId>
-      <artifactId>jboss-ejb-client-legacy</artifactId>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
@@ -3689,7 +3678,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana</groupId>
-      <artifactId>jbosstxbridge-jakarta</artifactId>
+      <artifactId>jbosstxbridge</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3700,7 +3689,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.compensations</groupId>
-      <artifactId>compensations-jakarta</artifactId>
+      <artifactId>compensations</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3711,7 +3700,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.jts</groupId>
-      <artifactId>narayana-jts-idlj-jakarta</artifactId>
+      <artifactId>narayana-jts-idlj</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3722,7 +3711,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.jts</groupId>
-      <artifactId>narayana-jts-integration-jakarta</artifactId>
+      <artifactId>narayana-jts-integration</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3733,7 +3722,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.rts</groupId>
-      <artifactId>restat-api-jakarta</artifactId>
+      <artifactId>restat-api</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3744,7 +3733,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.rts</groupId>
-      <artifactId>restat-bridge-jakarta</artifactId>
+      <artifactId>restat-bridge</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3755,7 +3744,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.rts</groupId>
-      <artifactId>restat-integration-jakarta</artifactId>
+      <artifactId>restat-integration</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3766,7 +3755,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.rts</groupId>
-      <artifactId>restat-util-jakarta</artifactId>
+      <artifactId>restat-util</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
@@ -3777,7 +3766,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.narayana.xts</groupId>
-      <artifactId>jbossxts-jakarta</artifactId>
+      <artifactId>jbossxts</artifactId>
       <licenses>
         <license>
           <name>GNU Lesser General Public License v2.1 only</name>
