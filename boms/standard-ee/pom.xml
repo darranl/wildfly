@@ -252,7 +252,7 @@
 
             <dependency>
                 <groupId>${ee.maven.groupId}</groupId>
-                <artifactId>wildfly-elytron-authentication</artifactId>
+                <artifactId>wildfly-elytron-dynamic-form</artifactId>
                 <version>${ee.maven.version}</version>
                 <exclusions>
                     <exclusion>

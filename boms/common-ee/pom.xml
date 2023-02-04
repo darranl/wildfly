@@ -671,7 +671,7 @@
             </dependency>
             <dependency>
                 <groupId>${full.maven.groupId}</groupId>
-                <artifactId>wildfly-elytron-authentication</artifactId>
+                <artifactId>wildfly-elytron-dynamic-form</artifactId>
                 <version>${full.maven.version}</version>
             </dependency>
             <dependency>
