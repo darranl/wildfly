@@ -25,7 +25,7 @@
     </properties>
 
     <resources>
-        <artifact name="${org.wildfly:wildfly-elytron-dynamic-form}"/>
+        <artifact name="${org.wildfly:wildfly-elytron-dynamic-form-subsystem}"/>
     </resources>
 
     <dependencies>
