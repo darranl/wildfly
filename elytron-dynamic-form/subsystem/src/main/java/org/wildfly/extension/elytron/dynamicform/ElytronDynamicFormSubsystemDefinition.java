@@ -25,6 +25,7 @@ import org.jboss.as.controller.AttributeDefinition;
 import org.jboss.as.controller.PersistentResourceDefinition;
 import org.jboss.as.controller.ReloadRequiredRemoveStepHandler;
 import org.jboss.as.controller.SimpleResourceDefinition;
+import org.jboss.as.controller.registry.ManagementResourceRegistration;
 
 /**
  *
@@ -43,4 +44,12 @@ class ElytronDynamicFormSubsystemDefinition extends PersistentResourceDefinition
     public Collection<AttributeDefinition> getAttributes() {
         return Collections.emptyList();
     }
+
+    @Override
+    public void registerChildren(ManagementResourceRegistration resourceRegistration) {
+        resourceRegistration.registerSubModel(new DynamicFormDefinition());
+
+    }
+
+
 }

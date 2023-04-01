@@ -18,30 +18,13 @@
 
 package org.wildfly.extension.elytron.dynamicform;
 
-import java.io.IOException;
-
-import org.jboss.as.subsystem.test.AbstractSubsystemBaseTest;
-
 /**
- * Subsystem test for the Elytron Authentication subsystem.
+ * Constants used by the Elytron Dynamic Form subsystem.
  *
  * @author <a href="mailto:darran.lofthouse@jboss.com">Darran Lofthouse</a>
  */
-public class ElytronDynamicFormSubsystemTestCase extends AbstractSubsystemBaseTest {
+interface ElytronDynamicFormConstants {
 
-    public ElytronDynamicFormSubsystemTestCase() {
-        super(ElytronDynamicFormExtension.SUBSYSTEM_NAME, new ElytronDynamicFormExtension());
-    }
+    String DYNAMIC_FORM = "dynamic-form";
 
-    @Override
-    protected String getSubsystemXml() throws IOException {
-        return "<subsystem xmlns=\"urn:wildfly:elytron-dynamic-form:1.0\"/>";
-    }
-
-    @Override
-    protected String getSubsystemXsdPath() throws Exception {
-        return "schema/wildfly-elytron-dynamic-form_1_0.xsd";
-    }
-
-    //no point in testing 1.0.0 (current) --> 1.0.0 (all previous) for transformers
 }

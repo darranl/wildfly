@@ -36,6 +36,7 @@
 
     <name>WildFly: Elytron Dynamic Form Support</name>
     <modules>
+        <module>context</module>
         <module>subsystem</module>
     </modules>
 
