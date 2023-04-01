@@ -41,12 +41,9 @@
     <name>WildFly: Elytron Authentication</name>
 
     <dependencies>
-
-        <!-- Jakarta-namespace specific deps -->
-
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>wildfly-ee</artifactId>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-core</artifactId>
         </dependency>
 
         <dependency>

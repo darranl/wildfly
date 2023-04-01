@@ -43,5 +43,4 @@ public class ElytronDynamicFormSubsystemTestCase extends AbstractSubsystemBaseTe
         return "schema/wildfly-elytron-dynamic-form_1_0.xsd";
     }
 
-    //no point in testing 1.0.0 (current) --> 1.0.0 (all previous) for transformers
 }
