@@ -50,6 +50,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.sql.DataSource;
@@ -85,14 +86,16 @@ import org.jboss.jca.core.spi.mdr.MetadataRepository;
 import org.jboss.jca.core.spi.rar.ResourceAdapterRepository;
 import org.jboss.jca.core.spi.transaction.TransactionIntegration;
 import org.jboss.jca.deployers.common.CommonDeployment;
+import org.jboss.msc.Service;
 import org.jboss.msc.service.LifecycleEvent;
 import org.jboss.msc.service.LifecycleListener;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceRegistry;
+import org.jboss.msc.service.StartContext;
+import org.jboss.msc.service.StopContext;
 import org.jboss.msc.service.ServiceTarget;
-import org.jboss.msc.service.ValueInjectionService;
 import org.wildfly.common.function.ExceptionSupplier;
 import org.wildfly.security.auth.client.AuthenticationContext;
 import org.wildfly.security.credential.source.CredentialSource;
@@ -126,14 +129,6 @@ public abstract class AbstractDataSourceAdd extends AbstractAddStepHandler {
 
     @Override
     protected void performRuntime(final OperationContext context, final ModelNode operation, final ModelNode model) throws OperationFailedException {
-        // add extra security validation: authentication contexts should only be defined when Elytron Enabled is true
-        // domains should only be defined when Elytron enabled is undefined or false (default value)
-        if (model.hasDefined(AUTHENTICATION_CONTEXT.getName()) && !ELYTRON_ENABLED.resolveModelAttribute(context, model).asBoolean()) {
-            throw SUBSYSTEM_DATASOURCES_LOGGER.attributeRequiresTrueAttribute(AUTHENTICATION_CONTEXT.getName(), ELYTRON_ENABLED.getName());
-        }
-        else if (ELYTRON_ENABLED.resolveModelAttribute(context, model).asBoolean() && model.hasDefined(SECURITY_DOMAIN.getName())){
-            throw SUBSYSTEM_DATASOURCES_LOGGER.attributeRequiresFalseOrUndefinedAttribute(SECURITY_DOMAIN.getName(), ELYTRON_ENABLED.getName());
-        }
 
         final boolean enabled = ENABLED.resolveModelAttribute(context, model).asBoolean();
         if (enabled) {
@@ -164,23 +159,17 @@ public abstract class AbstractDataSourceAdd extends AbstractAddStepHandler {
         @SuppressWarnings("unused")
         final boolean statsEnabled = STATISTICS_ENABLED.resolveModelAttribute(context, model).asBoolean();
         final CapabilityServiceSupport support = context.getCapabilityServiceSupport();
-
         final ServiceTarget serviceTarget = context.getServiceTarget();
-
-
-        ModelNode node = DATASOURCE_DRIVER.resolveModelAttribute(context, model);
-
+        final ModelNode node = DATASOURCE_DRIVER.resolveModelAttribute(context, model);
         final String driverName = node.asString();
         final ServiceName driverServiceName = ServiceName.JBOSS.append("jdbc-driver", driverName.replaceAll("\\.", "_"));
 
-
-        ValueInjectionService<Driver> driverDemanderService = new ValueInjectionService<Driver>();
-
         final ServiceName driverDemanderServiceName = ServiceName.JBOSS.append("driver-demander").append(jndiName);
-        final ServiceBuilder<?> driverDemanderBuilder = serviceTarget
-                .addService(driverDemanderServiceName, driverDemanderService)
-                .addDependency(driverServiceName, Driver.class, driverDemanderService.getInjector());
-        driverDemanderBuilder.setInitialMode(ServiceController.Mode.ACTIVE);
+        final ServiceBuilder<?> driverDemanderBuilder = serviceTarget.addService(driverDemanderServiceName);
+        final Consumer<Driver> driverConsumer = driverDemanderBuilder.provides(driverDemanderServiceName);
+        final Supplier<Driver> driverSupplier = driverDemanderBuilder.requires(driverServiceName);
+        driverDemanderBuilder.setInstance(new DriverDemanderService(driverConsumer, driverSupplier));
+        driverDemanderBuilder.install();
 
         AbstractDataSourceService dataSourceService = createDataSourceService(dsName, jndiName);
 
@@ -277,9 +266,7 @@ public abstract class AbstractDataSourceAdd extends AbstractAddStepHandler {
          }
 
         dataSourceServiceBuilder.setInitialMode(ServiceController.Mode.NEVER);
-
         dataSourceServiceBuilder.install();
-        driverDemanderBuilder.install();
     }
 
 
@@ -485,4 +472,22 @@ public abstract class AbstractDataSourceAdd extends AbstractAddStepHandler {
         return result;
     }
 
+    private static final class DriverDemanderService implements Service {
+        private final Consumer<Driver> driverConsumer;
+        private final Supplier<Driver> driverSupplier;
+        private DriverDemanderService(final Consumer<Driver> driverConsumer, final Supplier<Driver> driverSupplier) {
+            this.driverConsumer = driverConsumer;
+            this.driverSupplier = driverSupplier;
+        }
+
+        @Override
+        public void start(final StartContext startContext) {
+            driverConsumer.accept(driverSupplier.get());
+        }
+
+        @Override
+        public void stop(final StopContext stopContext) {
+            driverConsumer.accept(null);
+        }
+    }
 }

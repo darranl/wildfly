@@ -28,6 +28,8 @@ import java.util.function.Supplier;
 
 import org.jboss.as.controller.Extension;
 import org.jboss.as.controller.ExtensionContext;
+import org.jboss.as.controller.SubsystemModel;
+import org.jboss.as.controller.SubsystemSchema;
 import org.jboss.as.controller.parsing.ExtensionParsingContext;
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
 import org.jboss.dmr.ModelNode;
@@ -41,11 +43,11 @@ import org.jboss.staxmapper.XMLElementWriter;
 public class SubsystemExtension<S extends Enum<S> & SubsystemSchema<S>> implements Extension {
 
     private final String name;
-    private final Model currentModel;
+    private final SubsystemModel currentModel;
     private final Supplier<ManagementRegistrar<SubsystemRegistration>> registrarFactory;
     private final S currentSchema;
     private final XMLElementWriter<SubsystemMarshallingContext> writer;
-    private final Supplier<XMLElementReader<List<ModelNode>>> currentReaderFactory;
+    private final XMLElementReader<List<ModelNode>> currentReader;
 
     /**
      * Constructs a new extension using a reader factory and a separate writer implementation.
@@ -56,17 +58,17 @@ public class SubsystemExtension<S extends Enum<S> & SubsystemSchema<S>> implemen
      * @param readerFactory a factory for creating an XML reader
      * @param writer an XML writer
      */
-    protected SubsystemExtension(String name, Model currentModel, Supplier<ManagementRegistrar<SubsystemRegistration>> registrarFactory, S currentSchema, XMLElementWriter<SubsystemMarshallingContext> writer) {
+    protected SubsystemExtension(String name, SubsystemModel currentModel, Supplier<ManagementRegistrar<SubsystemRegistration>> registrarFactory, S currentSchema, XMLElementWriter<SubsystemMarshallingContext> writer) {
         this(name, currentModel, registrarFactory, currentSchema, writer, currentSchema);
     }
 
-    SubsystemExtension(String name, Model currentModel, Supplier<ManagementRegistrar<SubsystemRegistration>> registrarFactory, S currentSchema, XMLElementWriter<SubsystemMarshallingContext> writer, Supplier<XMLElementReader<List<ModelNode>>> currentReaderFactory) {
+    SubsystemExtension(String name, SubsystemModel currentModel, Supplier<ManagementRegistrar<SubsystemRegistration>> registrarFactory, S currentSchema, XMLElementWriter<SubsystemMarshallingContext> writer, XMLElementReader<List<ModelNode>> currentReader) {
         this.name = name;
         this.currentModel = currentModel;
         this.registrarFactory = registrarFactory;
         this.currentSchema = currentSchema;
         this.writer = writer;
-        this.currentReaderFactory = currentReaderFactory;
+        this.currentReader = currentReader;
     }
 
     @Override
@@ -80,8 +82,7 @@ public class SubsystemExtension<S extends Enum<S> & SubsystemSchema<S>> implemen
     @Override
     public void initializeParsers(ExtensionParsingContext context) {
         for (S schema : EnumSet.allOf(this.currentSchema.getDeclaringClass())) {
-            // Register via supplier so that reader is created lazily, and garbage collected when complete
-            context.setSubsystemXmlMapping(this.name, schema.getUri(), (schema == this.currentSchema) ? this.currentReaderFactory : schema);
+            context.setSubsystemXmlMapping(this.name, schema.getNamespace().getUri(), (schema == this.currentSchema) ? this.currentReader: schema);
         }
     }
 }

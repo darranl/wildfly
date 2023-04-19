@@ -23,8 +23,9 @@
 package org.wildfly.extension.clustering.singleton;
 
 import org.jboss.as.clustering.controller.SubsystemExtension;
-import org.jboss.as.clustering.controller.descriptions.SubsystemResourceDescriptionResolver;
 import org.jboss.as.controller.Extension;
+import org.jboss.as.controller.descriptions.ParentResourceDescriptionResolver;
+import org.jboss.as.controller.descriptions.SubsystemResourceDescriptionResolver;
 import org.kohsuke.MetaInfServices;
 
 /**
@@ -32,12 +33,12 @@ import org.kohsuke.MetaInfServices;
  * @author Paul Ferraro
  */
 @MetaInfServices(Extension.class)
-public class SingletonExtension extends SubsystemExtension<SingletonSchema> {
+public class SingletonExtension extends SubsystemExtension<SingletonSubsystemSchema> {
 
     static final String SUBSYSTEM_NAME = "singleton";
-    static final SubsystemResourceDescriptionResolver SUBSYSTEM_RESOLVER = new SubsystemResourceDescriptionResolver(SUBSYSTEM_NAME, SingletonExtension.class);
+    static final ParentResourceDescriptionResolver SUBSYSTEM_RESOLVER = new SubsystemResourceDescriptionResolver(SUBSYSTEM_NAME, SingletonExtension.class);
 
     public SingletonExtension() {
-        super(SUBSYSTEM_NAME, SingletonModel.CURRENT, SingletonResourceDefinition::new, SingletonSchema.CURRENT, new SingletonXMLWriter());
+        super(SUBSYSTEM_NAME, SingletonSubsystemModel.CURRENT, SingletonResourceDefinition::new, SingletonSubsystemSchema.CURRENT, new SingletonXMLWriter());
     }
 }

@@ -34,7 +34,7 @@
         Maintain separation between the artifact id and the version to help prevent
         merge conflicts between commits changing the GA and those changing the V.
         -->
-        <version>28.0.0.Beta1-SNAPSHOT</version>
+        <version>28.0.0.Final-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -385,30 +385,6 @@
                 <groupId>${ee.maven.groupId}</groupId>
                 <artifactId>wildfly-messaging-activemq-subsystem</artifactId>
                 <version>${project.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>${ee.maven.groupId}</groupId>
-                <artifactId>wildfly-opentelemetry-api</artifactId>
-                <version>${ee.maven.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>${ee.maven.groupId}</groupId>
-                <artifactId>wildfly-opentelemetry</artifactId>
-                <version>${ee.maven.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>
@@ -2153,7 +2129,7 @@
 
             <dependency>
                 <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-hibernate-cache-v60</artifactId>
+                <artifactId>infinispan-hibernate-cache-v62</artifactId>
                 <version>${version.org.infinispan}</version>
                 <exclusions>
                     <exclusion>
@@ -2189,7 +2165,7 @@
 
             <dependency>
                 <groupId>org.jboss</groupId>
-                <artifactId>jboss-iiop-client-jakarta</artifactId>
+                <artifactId>jboss-iiop-client</artifactId>
                 <version>${version.org.jboss.iiop-client}</version>
                 <exclusions>
                     <exclusion>
@@ -2201,7 +2177,7 @@
 
             <dependency>
                 <groupId>org.jboss</groupId>
-                <artifactId>jboss-transaction-spi-jakarta</artifactId>
+                <artifactId>jboss-transaction-spi</artifactId>
                 <version>${version.org.jboss.jboss-transaction-spi}</version>
                 <exclusions>
                     <exclusion>
@@ -2213,7 +2189,7 @@
 
             <dependency>
                 <groupId>org.jboss.activemq.artemis.integration</groupId>
-                <artifactId>artemis-wildfly-jakarta-integration</artifactId>
+                <artifactId>artemis-wildfly-integration</artifactId>
                 <version>${version.org.jboss.activemq.artemis.integration}</version>
                 <exclusions>
                     <exclusion>
@@ -2225,20 +2201,8 @@
 
             <dependency>
                 <groupId>org.jboss.genericjms</groupId>
-                <artifactId>generic-jakarta-messaging-ra-jar</artifactId>
+                <artifactId>generic-jms-ra-jar</artifactId>
                 <version>${version.org.jboss.genericjms}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.invocation</groupId>
-                <artifactId>jboss-invocation</artifactId>
-                <version>${version.org.jboss.invocation}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -2339,7 +2303,7 @@
 
             <dependency>
                 <groupId>org.jboss.metadata</groupId>
-                <artifactId>jboss-metadata-common-jakarta</artifactId>
+                <artifactId>jboss-metadata-common</artifactId>
                 <version>${version.org.jboss.metadata}</version>
                 <exclusions>
                     <exclusion>
@@ -2351,7 +2315,7 @@
 
             <dependency>
                 <groupId>org.jboss.metadata</groupId>
-                <artifactId>jboss-metadata-ejb-jakarta</artifactId>
+                <artifactId>jboss-metadata-ejb</artifactId>
                 <version>${version.org.jboss.metadata}</version>
                 <exclusions>
                     <exclusion>
@@ -2488,7 +2452,7 @@
 
             <dependency>
                 <groupId>org.jboss.openjdk-orb</groupId>
-                <artifactId>openjdk-orb-jakarta</artifactId>
+                <artifactId>openjdk-orb</artifactId>
                 <version>${version.org.jboss.openjdk-orb}</version>
                 <exclusions>
                     <exclusion>
@@ -2628,6 +2592,18 @@
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-validator-provider</artifactId>
                 <version>${version.org.jboss.resteasy}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-tracing-api</artifactId>
+                <version>${version.org.jboss.resteasy.extensions}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -2825,7 +2801,6 @@
                 <groupId>org.jboss.ws.cxf</groupId>
                 <artifactId>jbossws-cxf-resources</artifactId>
                 <version>${version.org.jboss.ws.cxf}</version>
-                <classifier>wildfly2700</classifier>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>
@@ -3008,8 +2983,8 @@
                 <version>${version.org.wildfly.naming-client}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.jboss.remoting3</groupId>
-                        <artifactId>jboss-remoting</artifactId>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

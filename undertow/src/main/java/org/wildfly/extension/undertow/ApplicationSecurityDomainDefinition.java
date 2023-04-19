@@ -34,7 +34,6 @@ import static org.wildfly.security.http.HttpConstants.FORM_NAME;
 
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -123,7 +122,7 @@ import io.undertow.servlet.api.LoginConfig;
  */
 public class ApplicationSecurityDomainDefinition extends PersistentResourceDefinition {
     static final PathElement PATH_ELEMENT = PathElement.pathElement(Constants.APPLICATION_SECURITY_DOMAIN);
-    private static Predicate<String> SERVLET_MECHANISM;
+    private static final Predicate<String> SERVLET_MECHANISM;
 
     static {
         Set<String> defaultMechanisms = new HashSet<>(4);
@@ -137,10 +136,6 @@ public class ApplicationSecurityDomainDefinition extends PersistentResourceDefin
 
     static final RuntimeCapability<Void> APPLICATION_SECURITY_DOMAIN_RUNTIME_CAPABILITY = RuntimeCapability
             .Builder.of(CAPABILITY_APPLICATION_SECURITY_DOMAIN, true, BiFunction.class)
-            .build();
-
-    static final RuntimeCapability<Void> APPLICATION_SECURITY_DOMAIN_KNOWN_DEPLOYMENTS_CAPABILITY = RuntimeCapability
-            .Builder.of(CAPABILITY_APPLICATION_SECURITY_DOMAIN_KNOWN_DEPLOYMENTS, true)
             .build();
 
     static final SimpleAttributeDefinition HTTP_AUTHENTICATION_FACTORY = new SimpleAttributeDefinitionBuilder(Constants.HTTP_AUTHENTICATION_FACTORY, ModelType.STRING, false)
@@ -187,7 +182,7 @@ public class ApplicationSecurityDomainDefinition extends PersistentResourceDefin
             .setRestartAllServices()
             .build();
 
-    private static final AttributeDefinition[] ATTRIBUTES = new AttributeDefinition[] { SECURITY_DOMAIN, HTTP_AUTHENTICATION_FACTORY, OVERRIDE_DEPLOYMENT_CONFIG, ENABLE_JACC, ENABLE_JASPI, INTEGRATED_JASPI };
+    static final Collection<AttributeDefinition> ATTRIBUTES = List.of(SECURITY_DOMAIN, HTTP_AUTHENTICATION_FACTORY, OVERRIDE_DEPLOYMENT_CONFIG, ENABLE_JACC, ENABLE_JASPI, INTEGRATED_JASPI);
 
     private static final AttachmentKey<KnownDeploymentsApi> KNOWN_DEPLOYMENTS_KEY = AttachmentKey.create(KnownDeploymentsApi.class);
 
@@ -383,10 +378,11 @@ public class ApplicationSecurityDomainDefinition extends PersistentResourceDefin
         private final Set<String> knownApplicationSecurityDomains;
 
         /**
-         * @param addOperation
+         * @param knownApplicationSecurityDomains set from which the name of the application security domain should be removed.
+         * @param addOperation  the add operation handler to use to rollback service removal. Cannot be @{code null}
          */
         protected RemoveHandler(Set<String> knownApplicationSecurityDomains, AbstractAddStepHandler addOperation) {
-            super(addOperation, APPLICATION_SECURITY_DOMAIN_RUNTIME_CAPABILITY, APPLICATION_SECURITY_DOMAIN_KNOWN_DEPLOYMENTS_CAPABILITY);
+            super(addOperation);
             this.knownApplicationSecurityDomains = knownApplicationSecurityDomains;
         }
 
@@ -394,6 +390,14 @@ public class ApplicationSecurityDomainDefinition extends PersistentResourceDefin
         protected void performRemove(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
             super.performRemove(context, operation, model);
             this.knownApplicationSecurityDomains.remove(context.getCurrentAddressValue());
+        }
+
+        @Override
+        protected void recordCapabilitiesAndRequirements(OperationContext context, ModelNode operation, Resource resource) throws OperationFailedException {
+            super.recordCapabilitiesAndRequirements(context, operation, resource);
+            context.deregisterCapability(
+                    RuntimeCapability.buildDynamicCapabilityName(CAPABILITY_APPLICATION_SECURITY_DOMAIN_KNOWN_DEPLOYMENTS, context.getCurrentAddressValue())
+            );
         }
 
         @Override
@@ -416,7 +420,7 @@ public class ApplicationSecurityDomainDefinition extends PersistentResourceDefin
 
     @Override
     public Collection<AttributeDefinition> getAttributes() {
-        return Arrays.asList(ATTRIBUTES);
+        return ATTRIBUTES;
     }
 
     Predicate<String> getKnownSecurityDomainPredicate() {

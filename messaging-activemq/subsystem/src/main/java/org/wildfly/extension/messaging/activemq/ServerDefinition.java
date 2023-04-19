@@ -39,11 +39,13 @@ import static org.wildfly.extension.messaging.activemq.MessagingExtension.VERSIO
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import org.apache.activemq.artemis.api.config.ActiveMQDefaultConfiguration;
 import org.apache.activemq.artemis.core.server.NetworkHealthCheck;
+import org.apache.activemq.artemis.utils.critical.CriticalAnalyzerPolicy;
 import org.jboss.as.controller.AttributeDefinition;
 import org.jboss.as.controller.ObjectTypeAttributeDefinition;
 import org.jboss.as.controller.OperationContext;
@@ -146,13 +148,13 @@ public class ServerDefinition extends PersistentResourceDefinition {
     public static final SimpleAttributeDefinition SECURITY_DOMAIN = create("security-domain", ModelType.STRING)
             .setAttributeGroup(SECURITY_ATTRIBUTE_GROUP)
             .setXmlName("domain")
-            .setDefaultValue(new ModelNode("other"))
             .setAlternatives("elytron-domain")
             .setRequired(false)
             .setAllowExpression(false) // references the security domain service name
             .setRestartAllServices()
             .addAccessConstraint(SensitiveTargetAccessConstraintDefinition.SECURITY_DOMAIN_REF)
             .addAccessConstraint(MessagingExtension.MESSAGING_SECURITY_SENSITIVE_TARGET)
+            .setCapabilityReference(Capabilities.LEGACY_SECURITY_DOMAIN_CAPABILITY.getName(), Capabilities.ACTIVEMQ_SERVER_CAPABILITY)
             .setDeprecated(MessagingExtension.VERSION_2_0_0)
             .build();
     public static final SimpleAttributeDefinition ELYTRON_DOMAIN = create("elytron-domain", ModelType.STRING)
@@ -243,7 +245,7 @@ public class ServerDefinition extends PersistentResourceDefinition {
             .setRestartAllServices()
             .build();
     // TODO: if this attribute is set, warn/error if any fs-related journal attribute is set.
-    // TODO: add capability for data-source https://github.com/wildfly/wildfly-capabilities/blob/master/org/wildfly/data-source/capability.adoc
+    // TODO: add capability for data-source https://github.com/wildfly/wildfly-capabilities/blob/main/org/wildfly/data-source/capability.adoc
     public static final SimpleAttributeDefinition JOURNAL_DATASOURCE = create("journal-datasource", STRING)
             .setAttributeGroup(JOURNAL_ATTRIBUTE_GROUP)
             .setXmlName("datasource")
@@ -914,7 +916,7 @@ public class ServerDefinition extends PersistentResourceDefinition {
             .setAttributeGroup(CRITICAL_ANALYZER_ATTRIBUTE_GROUP)
             .setXmlName("policy")
             .setDefaultValue(new ModelNode("LOG"))
-            .setAllowedValues("HALT", "SHUTDOWN", "LOG")
+            .setValidator(EnumValidator.create(CriticalAnalyzerPolicy.class, EnumSet.allOf(CriticalAnalyzerPolicy.class)))
             .setRequired(false)
             .setAllowExpression(true)
             .setRestartAllServices()

@@ -29,8 +29,8 @@ import static org.wildfly.extension.undertow.logging.UndertowLogger.ROOT_LOGGER;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.net.ssl.SSLContext;
@@ -69,7 +69,7 @@ import org.jboss.msc.service.StopContext;
 import org.wildfly.extension.undertow.Capabilities;
 import org.wildfly.extension.undertow.Constants;
 import org.wildfly.extension.undertow.UndertowExtension;
-import org.wildfly.extension.undertow.UndertowModel;
+import org.wildfly.extension.undertow.UndertowSubsystemModel;
 import org.wildfly.extension.undertow.deployment.GlobalRequestControllerHandler;
 import org.xnio.OptionMap;
 import org.xnio.Options;
@@ -131,7 +131,7 @@ public class ReverseProxyHandlerHostDefinition extends PersistentResourceDefinit
             .setRestartAllServices()
             .setValidator(new StringLengthValidator(1))
             .setAccessConstraints(SensitiveTargetAccessConstraintDefinition.SECURITY_REALM_REF)
-            .setDeprecated(UndertowModel.VERSION_12_0_0.getVersion())
+            .setDeprecated(UndertowSubsystemModel.VERSION_12_0_0.getVersion())
             .build();
 
     public static final SimpleAttributeDefinition ENABLE_HTTP2 = new SimpleAttributeDefinitionBuilder(Constants.ENABLE_HTTP2, ModelType.BOOLEAN)
@@ -140,6 +140,7 @@ public class ReverseProxyHandlerHostDefinition extends PersistentResourceDefinit
             .setRestartAllServices()
             .build();
 
+    public static final Collection<AttributeDefinition> ATTRIBUTES = List.of(OUTBOUND_SOCKET_BINDING, SCHEME, INSTANCE_ID, PATH, SSL_CONTEXT, SECURITY_REALM, ENABLE_HTTP2);
 
     ReverseProxyHandlerHostDefinition() {
         super(new SimpleResourceDefinition.Parameters(PATH_ELEMENT, UndertowExtension.getResolver(Constants.HANDLER, Constants.REVERSE_PROXY, PATH_ELEMENT.getKey()))
@@ -149,7 +150,7 @@ public class ReverseProxyHandlerHostDefinition extends PersistentResourceDefinit
 
     @Override
     public Collection<AttributeDefinition> getAttributes() {
-        return Arrays.asList(OUTBOUND_SOCKET_BINDING, SCHEME, INSTANCE_ID, PATH, SSL_CONTEXT, SECURITY_REALM, ENABLE_HTTP2);
+        return ATTRIBUTES;
     }
 
 

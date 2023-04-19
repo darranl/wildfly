@@ -22,13 +22,21 @@
 
 package org.wildfly.extension.undertow;
 
+import java.util.EnumSet;
+import java.util.List;
+
 import org.jboss.as.controller.Extension;
 import org.jboss.as.controller.ExtensionContext;
+import org.jboss.as.controller.PersistentResourceXMLDescription;
+import org.jboss.as.controller.PersistentResourceXMLDescriptionReader;
+import org.jboss.as.controller.PersistentResourceXMLDescriptionWriter;
 import org.jboss.as.controller.SubsystemRegistration;
 import org.jboss.as.controller.descriptions.StandardResourceDescriptionResolver;
 import org.jboss.as.controller.operations.common.GenericSubsystemDescribeHandler;
 import org.jboss.as.controller.parsing.ExtensionParsingContext;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
+import org.jboss.dmr.ModelNode;
+import org.jboss.staxmapper.XMLElementReader;
 
 
 /**
@@ -47,24 +55,19 @@ public class UndertowExtension implements Extension {
         return new StandardResourceDescriptionResolver(prefix.toString(), RESOURCE_NAME, UndertowExtension.class.getClassLoader(), true, false);
     }
 
+    private final PersistentResourceXMLDescription currentDescription = UndertowSubsystemSchema.CURRENT.getXMLDescription();
+
     @Override
     public void initializeParsers(ExtensionParsingContext context) {
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_3_1.getUriString(), UndertowSubsystemParser_3_1::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_4_0.getUriString(), UndertowSubsystemParser_4_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_5_0.getUriString(), UndertowSubsystemParser_5_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_6_0.getUriString(), UndertowSubsystemParser_6_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_7_0.getUriString(), UndertowSubsystemParser_7_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_8_0.getUriString(), UndertowSubsystemParser_8_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_9_0.getUriString(), UndertowSubsystemParser_9_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_10_0.getUriString(), UndertowSubsystemParser_10_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_11_0.getUriString(), UndertowSubsystemParser_11_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_12_0.getUriString(), UndertowSubsystemParser_12_0::new);
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.UNDERTOW_13_0.getUriString(), UndertowSubsystemParser_13_0::new);
+        for (UndertowSubsystemSchema schema : EnumSet.allOf(UndertowSubsystemSchema.class)) {
+            XMLElementReader<List<ModelNode>> reader = (schema == UndertowSubsystemSchema.CURRENT) ? new PersistentResourceXMLDescriptionReader(this.currentDescription) : schema;
+            context.setSubsystemXmlMapping(SUBSYSTEM_NAME, schema.getNamespace().getUri(), reader);
+        }
     }
 
     @Override
     public void initialize(ExtensionContext context) {
-        final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, UndertowModel.CURRENT.getVersion());
+        final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, UndertowSubsystemModel.CURRENT.getVersion());
         final ManagementResourceRegistration registration = subsystem.registerSubsystemModel(new UndertowRootDefinition());
         registration.registerOperationHandler(GenericSubsystemDescribeHandler.DEFINITION, GenericSubsystemDescribeHandler.INSTANCE, false);
 
@@ -72,7 +75,6 @@ public class UndertowExtension implements Extension {
         deployments.registerSubModel(new DeploymentServletDefinition());
         deployments.registerSubModel(new DeploymentWebSocketDefinition());
 
-        subsystem.registerXMLElementWriter(UndertowSubsystemParser_13_0::new);
+        subsystem.registerXMLElementWriter(new PersistentResourceXMLDescriptionWriter(this.currentDescription));
     }
-
 }

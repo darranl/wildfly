@@ -51,27 +51,25 @@ import org.junit.Test;
 
 public abstract class AbstractUndertowSubsystemTestCase extends AbstractSubsystemBaseTest {
     final Map<ServiceName, Supplier<Object>> values = new ConcurrentHashMap<>();
-    private final int major;
-    private final int minor;
+    private final UndertowSubsystemSchema schema;
 
     AbstractUndertowSubsystemTestCase() {
-        this(13, 0); // Latest version
+        this(UndertowSubsystemSchema.CURRENT);
     }
 
-    AbstractUndertowSubsystemTestCase(int major, int minor) {
+    AbstractUndertowSubsystemTestCase(UndertowSubsystemSchema schema) {
         super(UndertowExtension.SUBSYSTEM_NAME, new UndertowExtension());
-        this.major = major;
-        this.minor = minor;
+        this.schema = schema;
     }
 
     @Override
     protected String getSubsystemXml() throws IOException {
-        return readResource(String.format("undertow-%d.%d.xml", this.major, this.minor));
+        return readResource(String.format("undertow-%d.%d.xml", this.schema.getVersion().major(), this.schema.getVersion().minor()));
     }
 
     @Override
     protected String getSubsystemXsdPath() throws Exception {
-        return String.format("schema/wildfly-undertow_%d_%d.xsd", this.major, this.minor);
+        return String.format("schema/wildfly-undertow_%d_%d.xsd", this.schema.getVersion().major(), this.schema.getVersion().minor());
     }
 
     @Override
@@ -98,6 +96,9 @@ public abstract class AbstractUndertowSubsystemTestCase extends AbstractSubsyste
 
     @Test
     public void testRuntime() throws Exception {
+        // Skip runtime tests for old versions - since legacy SSO is only allowed in admin-only mode
+        if (!this.schema.since(UndertowSubsystemSchema.VERSION_14_0)) return;
+
         KernelServicesBuilder builder = createKernelServicesBuilder(new RuntimeInitialization(this.values)).setSubsystemXml(getSubsystemXml());
         KernelServices mainServices = builder.build();
 
@@ -187,7 +188,7 @@ public abstract class AbstractUndertowSubsystemTestCase extends AbstractSubsyste
         Assert.assertNotNull(accessLogService);
         Assert.assertFalse(accessLogService.isRotate());
 
-        if (this.major >= 13) {
+        if (this.schema.since(UndertowSubsystemSchema.VERSION_13_0)) {
             PathAddress address = PathAddress.pathAddress(UndertowRootDefinition.PATH_ELEMENT, PathElement.pathElement(Constants.APPLICATION_SECURITY_DOMAIN, "other"), SingleSignOnDefinition.PATH_ELEMENT);
             ModelNode result = mainServices.executeOperation(Util.getWriteAttributeOperation(address, SingleSignOnDefinition.Attribute.PATH.getName(), new ModelNode("/modified-path")));
             assertEquals(ModelDescriptionConstants.SUCCESS, result.get(ModelDescriptionConstants.OUTCOME).asString());

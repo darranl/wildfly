@@ -31,11 +31,11 @@ import org.jboss.as.clustering.controller.ResourceDescriptor;
 import org.jboss.as.clustering.controller.SimpleResourceRegistrar;
 import org.jboss.as.clustering.controller.ResourceServiceHandler;
 import org.jboss.as.clustering.controller.SimpleResourceServiceHandler;
-import org.jboss.as.clustering.controller.validation.EnumValidator;
 import org.jboss.as.controller.AttributeDefinition;
 import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.SimpleAttributeDefinitionBuilder;
 import org.jboss.as.controller.client.helpers.MeasurementUnit;
+import org.jboss.as.controller.operations.validation.EnumValidator;
 import org.jboss.as.controller.registry.AttributeAccess;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
@@ -56,11 +56,16 @@ public class LockingResourceDefinition extends ComponentResourceDefinition {
                 return builder.setMeasurementUnit(MeasurementUnit.MILLISECONDS);
             }
         },
-        CONCURRENCY("concurrency-level", ModelType.INT, new ModelNode(1000)),
+        CONCURRENCY("concurrency-level", ModelType.INT, new ModelNode(1000)) {
+            @Override
+            public SimpleAttributeDefinitionBuilder apply(SimpleAttributeDefinitionBuilder builder) {
+                return builder.setDeprecated(InfinispanSubsystemModel.VERSION_17_0_0.getVersion());
+            }
+        },
         ISOLATION("isolation", ModelType.STRING, new ModelNode(IsolationLevel.READ_COMMITTED.name())) {
             @Override
             public SimpleAttributeDefinitionBuilder apply(SimpleAttributeDefinitionBuilder builder) {
-                return builder.setValidator(new EnumValidator<>(IsolationLevel.class));
+                return builder.setValidator(EnumValidator.create(IsolationLevel.class));
             }
         },
         STRIPING("striping", ModelType.BOOLEAN, ModelNode.FALSE),

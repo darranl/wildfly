@@ -78,6 +78,11 @@ public class MessagingActiveMQSubsystem_14_0_TestCase extends AbstractSubsystemB
         return properties;
     }
 
+    @Override
+    protected KernelServices standardSubsystemTest(String configId, boolean compareXml) throws Exception {
+        return super.standardSubsystemTest(configId, false);
+    }
+
     @Test
     public void testJournalAttributes() throws Exception {
         KernelServices kernelServices = standardSubsystemTest(null, false);

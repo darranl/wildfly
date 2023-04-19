@@ -23,8 +23,9 @@
 package org.wildfly.extension.clustering.web;
 
 import org.jboss.as.clustering.controller.PersistentSubsystemExtension;
-import org.jboss.as.clustering.controller.descriptions.SubsystemResourceDescriptionResolver;
 import org.jboss.as.controller.Extension;
+import org.jboss.as.controller.descriptions.ParentResourceDescriptionResolver;
+import org.jboss.as.controller.descriptions.SubsystemResourceDescriptionResolver;
 import org.kohsuke.MetaInfServices;
 
 /**
@@ -32,12 +33,12 @@ import org.kohsuke.MetaInfServices;
  * @author Paul Ferraro
  */
 @MetaInfServices(Extension.class)
-public class DistributableWebExtension extends PersistentSubsystemExtension<DistributableWebSchema> {
+public class DistributableWebExtension extends PersistentSubsystemExtension<DistributableWebSubsystemSchema> {
 
     static final String SUBSYSTEM_NAME = "distributable-web";
-    static final SubsystemResourceDescriptionResolver SUBSYSTEM_RESOLVER = new SubsystemResourceDescriptionResolver(SUBSYSTEM_NAME, DistributableWebExtension.class);
+    static final ParentResourceDescriptionResolver SUBSYSTEM_RESOLVER = new SubsystemResourceDescriptionResolver(SUBSYSTEM_NAME, DistributableWebExtension.class);
 
     public DistributableWebExtension() {
-        super(SUBSYSTEM_NAME, DistributableWebModel.CURRENT, DistributableWebResourceDefinition::new, DistributableWebSchema.VERSION_3_0);
+        super(SUBSYSTEM_NAME, DistributableWebSubsystemModel.CURRENT, DistributableWebResourceDefinition::new, DistributableWebSubsystemSchema.VERSION_3_0);
     }
 }
