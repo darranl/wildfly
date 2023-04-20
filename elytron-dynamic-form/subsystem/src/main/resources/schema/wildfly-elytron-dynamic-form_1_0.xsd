@@ -30,8 +30,28 @@
             version="1.0">
 
     <!-- The Elytron Dynamic Form subsystem root element -->
-    <xs:element name="subsystem" type="subsystem"/>
+    <xs:element name="subsystem" type="subsystem-type"/>
 
-    <xs:complexType name="subsystem"/>
+    <xs:complexType name="subsystem-type">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="dynamic-form" type="dynamicFormType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="dynamicFormType">
+        <xs:annotation>
+            <xs:documentation>
+                Definition of a dynamic form resource.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Unique name to reference the dynamic-form resource.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
 
 </xs:schema>

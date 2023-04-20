@@ -18,6 +18,9 @@
 
 package org.wildfly.extension.elytron.dynamicform;
 
+import static org.wildfly.extension.elytron.dynamicform.ElytronDynamicFormConstants.DYNAMIC_FORM;
+
+import org.jboss.as.controller.PathElement;
 import org.jboss.as.controller.PersistentResourceXMLDescription;
 import org.jboss.as.controller.PersistentResourceXMLParser;
 
@@ -27,10 +30,18 @@ import org.jboss.as.controller.PersistentResourceXMLParser;
  */
 public class ElytronDynamicFormSubsystemParser_1_0 extends PersistentResourceXMLParser {
 
+    private PersistentResourceXMLDescription getDynamicPormDefinition() {
+        PersistentResourceXMLDescription.PersistentResourceXMLBuilder dynamicFormBuilder = PersistentResourceXMLDescription
+                .builder(PathElement.pathElement(DYNAMIC_FORM));
+
+        return dynamicFormBuilder.build();
+    }
+
     @Override
     public PersistentResourceXMLDescription getParserDescription() {
-        return PersistentResourceXMLDescription.builder(ElytronDynamicFormExtension.SUBSYSTEM_PATH, ElytronDynamicFormExtension.NAMESPACE)
-                .build();
+        return PersistentResourceXMLDescription
+                .builder(ElytronDynamicFormExtension.SUBSYSTEM_PATH, ElytronDynamicFormExtension.NAMESPACE)
+                .addChild(getDynamicPormDefinition()).build();
     }
-}
 
+}
