@@ -89,6 +89,15 @@
       <packageUrl regex="true">^pkg:maven/org\.wildfly\.galleon\-plugins/wildfly\-galleon\-plugins@.*$</packageUrl>
       <cpe>cpe:/a:redhat:wildfly</cpe>
    </suppress>
+   <suppress>
+      <notes><![CDATA[
+      file name: wildfly-elytron-oidc-client-subsystem-32.0.0.Final.jar
+
+      Invalid mapping from openid to our subsystem.
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/org\.wildfly/wildfly\-elytron\-oidc\-client\-subsystem@.*$</packageUrl>
+      <cpe>cpe:/a:openid:openid</cpe>
+   </suppress>
 
    <!-- CVE Expressions -->
 
@@ -198,6 +207,16 @@
       <packageUrl regex="true">^pkg:maven/io\.undertow/undertow\-core@.*$</packageUrl>
       <vulnerabilityName>CVE-2016-6311</vulnerabilityName>
    </suppress>
+   <suppress until="2025-05-30">
+      <notes><![CDATA[
+      file name: undertow-core-2.3.12.Final.jar
+
+      Fixed in WildFly 11
+          https://github.com/wildfly/wildfly/commit/1701f0d5dbd16af472badd04815bb3dddc954cea
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/org\.wildfly/wildfly\-client\-all@.*$</packageUrl> 
+      <vulnerabilityName>CVE-2016-6311</vulnerabilityName>
+   </suppress>
    <suppress until="2025-03-08">
       <notes><![CDATA[
       file name: resteasy-spring-3.0.4.Final.jar
@@ -238,7 +257,7 @@
       <packageUrl regex="true">^pkg:maven/joda\-time/joda\-time@.*$</packageUrl>
       <vulnerabilityName>CVE-2024-23080</vulnerabilityName>
    </suppress>   
-   <suppress>
+   <suppress until="2025-05-30">
       <notes><![CDATA[
       Many packages matched.
       ]]></notes>
