@@ -238,4 +238,11 @@
       <packageUrl regex="true">^pkg:maven/joda\-time/joda\-time@.*$</packageUrl>
       <vulnerabilityName>CVE-2024-23080</vulnerabilityName>
    </suppress>   
+   <suppress>
+      <notes><![CDATA[
+      Many packages matched.
+      ]]></notes>
+      <packageUrl regex="true">^pkg:maven/org\.wildfly.*/.*$</packageUrl>
+      <cve>CVE-2022-0866</cve>
+   </suppress>
 </suppressions>
