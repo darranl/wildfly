@@ -20,7 +20,7 @@
         Maintain separation between the artifact id and the version to help prevent
         merge conflicts between commits changing the GA and those changing the V.
     -->
-    <version>34.0.0.Final-SNAPSHOT</version>
+    <version>35.0.0.Beta1-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -132,7 +132,7 @@
         <ee.dist.product.release.version>${full.dist.product.release.version}</ee.dist.product.release.version>
         <ee.maven.groupId>${project.groupId}</ee.maven.groupId>
         <ee.maven.version>${project.version}</ee.maven.version>
-        <product.docs.server.version>34</product.docs.server.version>
+        <product.docs.server.version>35</product.docs.server.version>
         <!-- A short variant of product.release.version used in 'startsWith' tests done by dist verification logic -->
         <verifier.product.release.version>${product.docs.server.version}.0</verifier.product.release.version>
         <!-- The Galleon channel for the minor version with which this branch is associated.  -->
@@ -333,7 +333,7 @@
         <version.org.wildfly.bom-builder-plugin>2.0.7.Final</version.org.wildfly.bom-builder-plugin>
         <version.org.wildfly.checkstyle-config>1.0.8.Final</version.org.wildfly.checkstyle-config>
         <version.org.wildfly.common>1.6.0.Final</version.org.wildfly.common>
-        <version.org.wildfly.galleon-plugins>7.1.2.Final</version.org.wildfly.galleon-plugins>
+        <version.org.wildfly.galleon-plugins>7.2.1.Final</version.org.wildfly.galleon-plugins>
         <version.org.wildfly.glow>1.0.0.Final</version.org.wildfly.glow>
         <version.org.wildfly.licenses.plugin>2.4.1.Final</version.org.wildfly.licenses.plugin>
         <version.org.wildfly.plugin>5.0.1.Final</version.org.wildfly.plugin>
@@ -464,7 +464,7 @@
         <version.jakarta.enterprise.concurrent.jakarta-enterprise.concurrent-api>3.0.3</version.jakarta.enterprise.concurrent.jakarta-enterprise.concurrent-api>
         <version.jakarta.enterprise>4.0.1</version.jakarta.enterprise>
         <version.jakarta.faces.jakarta-faces-api>4.0.1</version.jakarta.faces.jakarta-faces-api>
-        <version.jakarta.faces>4.0.7</version.jakarta.faces>
+        <version.jakarta.faces>4.0.8</version.jakarta.faces>
         <version.jakarta.inject.jakarta.inject-api>2.0.1</version.jakarta.inject.jakarta.inject-api>
         <version.jakarta.jms.jakarta-jms-api>3.1.0</version.jakarta.jms.jakarta-jms-api>
         <version.jakarta.json.bind.api>3.0.1</version.jakarta.json.bind.api>
@@ -528,7 +528,7 @@
         <version.org.glassfish.jaxb.jaxb-xjc>${version.org.glassfish.jaxb}</version.org.glassfish.jaxb.jaxb-xjc>
         <version.org.glassfish.soteria>3.0.3</version.org.glassfish.soteria>
         <version.org.glassfish.web.jakarta.servlet.jsp.jstl>3.0.1-jbossorg-1</version.org.glassfish.web.jakarta.servlet.jsp.jstl>
-        <version.org.hibernate.commons.annotations>7.0.1.Final</version.org.hibernate.commons.annotations>
+        <version.org.hibernate.commons.annotations>7.0.3.Final</version.org.hibernate.commons.annotations>
         <version.org.hibernate>6.6.1.Final</version.org.hibernate>
         <version.org.hibernate.search>7.2.1.Final</version.org.hibernate.search>
         <version.org.hibernate.validator>8.0.1.Final</version.org.hibernate.validator>
@@ -539,7 +539,7 @@
         <version.org.jberet>3.0.0.Final</version.org.jberet>
         <version.org.jboss.activemq.artemis.integration>2.0.2.Final</version.org.jboss.activemq.artemis.integration>
         <version.org.jboss.common.jboss-common-beans>2.0.1.Final</version.org.jboss.common.jboss-common-beans>
-        <version.org.jboss.ejb-client>5.0.7.Final</version.org.jboss.ejb-client>
+        <version.org.jboss.ejb-client>5.0.8.Final</version.org.jboss.ejb-client>
         <version.org.jboss.ejb3.ext-api>2.4.0.Final</version.org.jboss.ejb3.ext-api>
         <version.org.jboss.genericjms>3.0.0.Final</version.org.jboss.genericjms>
         <version.org.jboss.hal.console>3.7.5.Final</version.org.jboss.hal.console>
@@ -548,7 +548,7 @@
         <version.org.jboss.jboss-transaction-spi>8.0.0.Final</version.org.jboss.jboss-transaction-spi>
         <version.org.jboss.metadata>16.0.0.Final</version.org.jboss.metadata>
         <version.org.jboss.mod_cluster>2.0.4.Final</version.org.jboss.mod_cluster>
-        <version.org.jboss.narayana>7.0.2.Final</version.org.jboss.narayana>
+        <version.org.jboss.narayana>7.1.0.Final</version.org.jboss.narayana>
         <version.org.jboss.openjdk-orb>10.1.0.Final</version.org.jboss.openjdk-orb>
         <version.org.jboss.resteasy>6.2.10.Final</version.org.jboss.resteasy>
         <version.org.jboss.resteasy.extensions>2.0.1.Final</version.org.jboss.resteasy.extensions>
@@ -580,7 +580,7 @@
         <version.org.ow2.asm>9.7</version.org.ow2.asm>
         <version.org.reactivestreams>1.0.4</version.org.reactivestreams>
         <version.org.wildfly.clustering>1.1.2.Final</version.org.wildfly.clustering>
-        <version.org.wildfly.core>26.0.0.Final</version.org.wildfly.core>
+        <version.org.wildfly.core>27.0.0.Beta1</version.org.wildfly.core>
         <preview.version.org.wildfly.extras.grpc>0.1.11.Final</preview.version.org.wildfly.extras.grpc>
         <version.org.wildfly.http-client>2.0.7.Final</version.org.wildfly.http-client>
         <version.org.wildfly.mvc.krazo>1.0.0.Final</version.org.wildfly.mvc.krazo>
