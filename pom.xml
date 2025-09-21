@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>47</version>
+        <version>50</version>
         <!-- The empty relativePath makes Maven lookup it in the repository. Missing tag default is ../pom.xml. -->
         <relativePath/>
     </parent>
@@ -72,19 +72,15 @@
         <ee.dist.product.release.version>${full.dist.product.release.version}</ee.dist.product.release.version>
         <ee.maven.groupId>${project.groupId}</ee.maven.groupId>
         <ee.maven.version>${project.version}</ee.maven.version>
-        <product.docs.server.version>36</product.docs.server.version>
+        <product.docs.server.version>38</product.docs.server.version>
         <!-- The Galleon channel for the minor version with which this branch is associated.  -->
         <galleon.minor.channel>${product.docs.server.version}.0</galleon.minor.channel>
 
         <!-- Repository Deployment Settings -->
-        <nexus.serverId>jboss</nexus.serverId>
-        <nexus.repository.release>releases</nexus.repository.release>
         <nexus.repository.staging>wildfly-staging</nexus.repository.staging>
-        <nexus.repository.url>https://repository.jboss.org/nexus/</nexus.repository.url>
         <nexus.staging.tag>wildfly-${project.version}</nexus.staging.tag>
-
-        <!-- maven-gpg-plugin -->
-        <gpg.pinEntryMode>loopback</gpg.pinEntryMode>
+        <!-- Nexus staging repository URL used to retrieve test component releases -->
+        <nexus.repository.staging.url>${nexus.repository.url}repository/${nexus.repository.staging}</nexus.repository.staging.url>
 
         <!-- Galleon -->
         <galleon.fork.embedded>true</galleon.fork.embedded>
@@ -272,13 +268,11 @@
          -->
         <version.ant.junit>1.10.15</version.ant.junit>
         <version.asciidoctor.plugin>2.2.6</version.asciidoctor.plugin>
-        <version.gpg.plugin>3.2.8</version.gpg.plugin>
-        <version.nxrm3.plugin>1.0.7</version.nxrm3.plugin>
         <version.org.jacoco>0.8.12</version.org.jacoco>
         <version.org.jboss.galleon>6.0.4.Final</version.org.jboss.galleon>
         <version.org.jboss.wildscribe>3.1.0.Final</version.org.jboss.wildscribe>
         <version.org.owasp.dependency-check>12.1.3</version.org.owasp.dependency-check>
-        <version.org.wildfly.bom-builder-plugin>2.0.8.Final</version.org.wildfly.bom-builder-plugin>
+        <version.org.wildfly.bom-builder-plugin>2.0.10.Final</version.org.wildfly.bom-builder-plugin>
         <version.org.wildfly.checkstyle-config>1.0.8.Final</version.org.wildfly.checkstyle-config>
         <version.org.wildfly.common>1.6.0.Final</version.org.wildfly.common>
         <version.org.wildfly.galleon-plugins>7.3.1.Final</version.org.wildfly.galleon-plugins>
@@ -286,7 +280,7 @@
         <version.org.wildfly.licenses.plugin>2.4.2.Final</version.org.wildfly.licenses.plugin>
         <version.org.wildfly.plugin>5.1.0.Final</version.org.wildfly.plugin>
         <version.org.wildfly.unstable.annotation.api>1.0.2.Final</version.org.wildfly.unstable.annotation.api>
-        <version.org.wildfly.wildfly-channel-plugin>1.0.25</version.org.wildfly.wildfly-channel-plugin>
+        <version.org.wildfly.wildfly-channel-plugin>1.0.29</version.org.wildfly.wildfly-channel-plugin>
         <version.org.wildfly.wildfly-maven-gpg-plugin>3.2.8.SP1</version.org.wildfly.wildfly-maven-gpg-plugin>
         <version.verifier.plugin>1.1</version.verifier.plugin>
         <version.xml.plugin>1.0.2</version.xml.plugin>
@@ -344,7 +338,7 @@
              on the dependency on the MicroProfile REST Client TCK POM.
          -->
         <version.org.testng.mp.rest.client>7.10.2</version.org.testng.mp.rest.client>
-        <version.org.wildfly.arquillian>5.1.0.Beta11</version.org.wildfly.arquillian>
+        <version.org.wildfly.arquillian>5.1.0.Final</version.org.wildfly.arquillian>
         <version.org.wildfly.extras.creaper>2.0.3</version.org.wildfly.extras.creaper>
         <legacy.version.org.wildfly.naming-client>1.0.17.Final</legacy.version.org.wildfly.naming-client>
 
@@ -391,26 +385,26 @@
         <version.io.github.resilience4j>2.2.0</version.io.github.resilience4j>
         <version.io.grpc>1.70.0</version.io.grpc>
         <version.io.micrometer>1.15.0</version.io.micrometer>
-        <version.io.netty>4.1.123.Final</version.io.netty>
+        <version.io.netty>4.1.127.Final</version.io.netty>
         <version.io.opentelemetry.instrumentation>2.8.0</version.io.opentelemetry.instrumentation>
         <version.io.opentelemetry.opentelemetry-semconv>1.25.0-alpha</version.io.opentelemetry.opentelemetry-semconv>
         <version.io.opentelemetry.opentelemetry>1.42.1</version.io.opentelemetry.opentelemetry>
         <version.io.opentelemetry.proto>1.3.2-alpha</version.io.opentelemetry.proto>
-        <version.io.perfmark>0.23.0</version.io.perfmark>
         <version.io.prometheus>1.3.3</version.io.prometheus>
         <version.io.reactivex.rxjava2>2.2.21</version.io.reactivex.rxjava2>
         <version.io.reactivex.rxjava3>3.1.11</version.io.reactivex.rxjava3>
         <version.io.smallrye.open-api>4.0.12</version.io.smallrye.open-api>
         <version.io.smallrye.reactive-utils>2.6.0</version.io.smallrye.reactive-utils>
-        <version.io.smallrye.smallrye-config>3.12.4</version.io.smallrye.smallrye-config>
-        <version.io.smallrye.smallrye-fault-tolerance>6.9.1</version.io.smallrye.smallrye-fault-tolerance>
+        <version.io.smallrye.smallrye-config>3.13.4</version.io.smallrye.smallrye-config>
+        <version.io.smallrye.smallrye-fault-tolerance>6.9.3</version.io.smallrye.smallrye-fault-tolerance>
         <version.io.smallrye.smallrye-health>4.2.0</version.io.smallrye.smallrye-health>
         <version.io.smallrye.smallrye-jwt>4.3.1</version.io.smallrye.smallrye-jwt>
-        <version.io.smallrye.smallrye-mutiny>2.7.0</version.io.smallrye.smallrye-mutiny>
+        <version.io.smallrye.smallrye-mutiny>2.8.0</version.io.smallrye.smallrye-mutiny>
         <version.io.smallrye.smallrye-mutiny-vertx>3.17.1</version.io.smallrye.smallrye-mutiny-vertx>
         <version.io.smallrye.smallrye-mutiny-zero>1.1.1</version.io.smallrye.smallrye-mutiny-zero>
         <version.io.smallrye.smallrye-opentelemetry>2.9.2</version.io.smallrye.smallrye-opentelemetry>
-        <version.io.smallrye.smallrye-reactive-messaging>4.25.0</version.io.smallrye.smallrye-reactive-messaging>
+        <version.io.smallrye.smallrye-stork>2.7.3</version.io.smallrye.smallrye-stork>
+        <version.io.smallrye.smallrye-reactive-messaging>4.28.0</version.io.smallrye.smallrye-reactive-messaging>
         <version.io.undertow.jastow>2.2.8.Final</version.io.undertow.jastow>
         <version.io.vertx.vertx>4.5.16</version.io.vertx.vertx>
         <version.io.vertx.vertx-kafka-client>4.4.9</version.io.vertx.vertx-kafka-client>
@@ -443,10 +437,10 @@
         <version.joda-time>2.12.7</version.joda-time>
         <version.net.jcip>1.0</version.net.jcip>
         <version.net.shibboleth.utilities.java-support>8.0.0</version.net.shibboleth.utilities.java-support>
-        <version.org.apache.activemq.artemis>2.41.0</version.org.apache.activemq.artemis>
+        <version.org.apache.activemq.artemis>2.42.0</version.org.apache.activemq.artemis>
         <version.org.apache.activemq.artemis.native>2.0.0</version.org.apache.activemq.artemis.native>
         <version.org.apache.avro>1.12.0</version.org.apache.avro>
-        <version.org.apache.cxf>4.0.8</version.org.apache.cxf>
+        <version.org.apache.cxf>4.0.9-jbossorg-1</version.org.apache.cxf>
         <version.org.apache.cxf.xjcplugins>4.1.0</version.org.apache.cxf.xjcplugins>
         <version.org.apache.httpcomponents.httpasyncclient>4.1.5</version.org.apache.httpcomponents.httpasyncclient>
         <version.org.apache.james.apache-mime4j>0.8.12</version.org.apache.james.apache-mime4j>
@@ -465,7 +459,7 @@
         <version.org.codehaus.woodstox.woodstox-core>7.0.0</version.org.codehaus.woodstox.woodstox-core>
         <version.org.cryptacular>1.2.5</version.org.cryptacular>
         <version.org.eclipse.angus.angus-activation>2.0.2</version.org.eclipse.angus.angus-activation>
-        <version.org.eclipse.angus.angus-mail>2.0.3</version.org.eclipse.angus.angus-mail>
+        <version.org.eclipse.angus.angus-mail>2.0.4</version.org.eclipse.angus.angus-mail>
         <version.org.eclipse.jdt>3.33.0</version.org.eclipse.jdt>
         <version.org.eclipse.microprofile>7.0</version.org.eclipse.microprofile>
         <version.org.eclipse.microprofile.config.api>3.1</version.org.eclipse.microprofile.config.api>
@@ -488,11 +482,11 @@
         <version.org.glassfish.soteria>3.0.3</version.org.glassfish.soteria>
         <version.org.glassfish.web.jakarta.servlet.jsp.jstl>3.0.1-jbossorg-1</version.org.glassfish.web.jakarta.servlet.jsp.jstl>
         <version.org.hibernate.commons.annotations>7.0.3.Final</version.org.hibernate.commons.annotations>
-        <version.org.hibernate>6.6.19.Final</version.org.hibernate>
+        <version.org.hibernate>6.6.29.Final</version.org.hibernate>
         <version.org.hibernate.search>7.2.4.Final</version.org.hibernate.search>
-        <version.org.hibernate.validator>8.0.2.Final</version.org.hibernate.validator>
+        <version.org.hibernate.validator>8.0.3.Final</version.org.hibernate.validator>
         <version.org.hornetq>2.4.11.Final</version.org.hornetq>
-        <version.org.infinispan>15.2.4.Final</version.org.infinispan>
+        <version.org.infinispan>15.2.6.Final</version.org.infinispan>
         <version.org.jasypt>1.9.3</version.org.jasypt>
         <version.org.jberet>3.1.0.Final</version.org.jberet>
         <version.org.jboss.activemq.artemis.integration>2.0.4.Final</version.org.jboss.activemq.artemis.integration>
@@ -500,14 +494,14 @@
         <version.org.jboss.ejb-client>5.0.8.Final</version.org.jboss.ejb-client>
         <version.org.jboss.ejb3.ext-api>2.4.0.Final</version.org.jboss.ejb3.ext-api>
         <version.org.jboss.genericjms>3.0.0.Final</version.org.jboss.genericjms>
-        <version.org.jboss.hal.console>3.7.14.Final</version.org.jboss.hal.console>
+        <version.org.jboss.hal.console>3.7.15.Final</version.org.jboss.hal.console>
         <version.org.jboss.iiop-client>2.0.1.Final</version.org.jboss.iiop-client>
         <version.org.jboss.ironjacamar>3.0.14.Final</version.org.jboss.ironjacamar>
         <version.org.jboss.jboss-transaction-spi>8.0.0.Final</version.org.jboss.jboss-transaction-spi>
         <version.org.jboss.metadata>16.1.0.Final</version.org.jboss.metadata>
         <version.org.jboss.mod_cluster>2.1.0.Final</version.org.jboss.mod_cluster>
         <version.org.jboss.narayana>7.2.2.Final</version.org.jboss.narayana>
-        <version.org.jboss.narayana.lra>1.0.1.Final</version.org.jboss.narayana.lra>
+        <version.org.jboss.narayana.lra>1.0.2.Final</version.org.jboss.narayana.lra>
         <version.org.jboss.openjdk-orb>10.1.1.Final</version.org.jboss.openjdk-orb>
         <version.org.jboss.resteasy>6.2.12.Final</version.org.jboss.resteasy>
         <version.org.jboss.resteasy.extensions>2.0.1.Final</version.org.jboss.resteasy.extensions>
@@ -523,12 +517,12 @@
         <version.org.jboss.ws.api>3.0.0.Final</version.org.jboss.ws.api>
         <version.org.jboss.ws.common>5.1.0.Final</version.org.jboss.ws.common>
         <version.org.jboss.ws.common.tools>2.1.0.Final</version.org.jboss.ws.common.tools>
-        <version.org.jboss.ws.cxf>7.3.3.Final</version.org.jboss.ws.cxf>
+        <version.org.jboss.ws.cxf>7.3.4.Final</version.org.jboss.ws.cxf>
         <version.org.jboss.ws.jaxws-undertow-httpspi>2.0.0.Final</version.org.jboss.ws.jaxws-undertow-httpspi>
         <version.org.jboss.ws.spi>5.0.0.Final</version.org.jboss.ws.spi>
         <version.org.jboss.xnio.netty.netty-xnio-transport>0.1.10.Final</version.org.jboss.xnio.netty.netty-xnio-transport>
         <version.org.jctools.jctools-core>4.0.5</version.org.jctools.jctools-core>
-        <version.org.jgroups>5.4.8.Final</version.org.jgroups>
+        <version.org.jgroups>5.4.10.Final</version.org.jgroups>
         <version.org.jgroups.aws>3.0.1.Final</version.org.jgroups.aws>
         <version.org.jgroups.azure>2.0.2.Final</version.org.jgroups.azure>
         <version.org.jgroups.kubernetes>2.0.2.Final</version.org.jgroups.kubernetes>
@@ -540,9 +534,9 @@
         <version.org.opensaml.opensaml>4.3.2</version.org.opensaml.opensaml>
         <version.org.ow2.asm>9.7.1</version.org.ow2.asm>
         <version.org.reactivestreams>1.0.4</version.org.reactivestreams>
-        <version.org.wildfly.clustering>7.0.8.Final</version.org.wildfly.clustering>
-        <version.org.wildfly.core>29.0.0.Final</version.org.wildfly.core>
-        <version.org.wildfly.http-client>2.1.1.Final</version.org.wildfly.http-client>
+        <version.org.wildfly.clustering>7.0.13.Final</version.org.wildfly.clustering>
+        <version.org.wildfly.core>30.0.0.Beta2</version.org.wildfly.core>
+        <version.org.wildfly.http-client>2.1.3.Final</version.org.wildfly.http-client>
         <version.org.wildfly.launcher>1.0.2.Final</version.org.wildfly.launcher>
         <version.org.wildfly.mvc.krazo>2.0.0.Final</version.org.wildfly.mvc.krazo>
         <version.org.wildfly.vertx>1.0.2.Final</version.org.wildfly.vertx>
@@ -1304,18 +1298,6 @@
                     <version>${version.help.plugin}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>${version.gpg.plugin}</version>
-                    <configuration>
-                        <useAgent>true</useAgent>
-                        <gpgArguments>
-                            <arg>--pinentry-mode</arg>
-                            <arg>${gpg.pinEntryMode}</arg>
-                        </gpgArguments>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.wildfly</groupId>
                     <artifactId>wildfly-maven-gpg-plugin</artifactId>
                     <version>${version.org.wildfly.wildfly-maven-gpg-plugin}</version>
@@ -1331,31 +1313,6 @@
                     <groupId>org.jboss.galleon</groupId>
                     <artifactId>galleon-maven-plugin</artifactId>
                     <version>${version.org.jboss.galleon}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.sonatype.plugins</groupId>
-                    <artifactId>nxrm3-maven-plugin</artifactId>
-                    <version>${version.nxrm3.plugin}</version>
-                    <configuration>
-                        <serverId>${nexus.serverId}</serverId>
-                        <nexusUrl>${nexus.repository.url}</nexusUrl>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>nexus-move</id>
-                            <configuration>
-                                <repository>${nexus.repository.staging}</repository>
-                                <destinationRepository>${nexus.repository.release}</destinationRepository>
-                                <tag>${nexus.staging.tag}</tag>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>nexus-delete</id>
-                            <configuration>
-                                <tag>${nexus.staging.tag}</tag>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.wildfly.galleon-plugins</groupId>
@@ -1461,53 +1418,6 @@
 
     <!-- Profiles -->
     <profiles>
-        <profile>
-            <id>jboss-release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default-deploy</id>
-                                <phase>none</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nxrm3-maven-plugin</artifactId>
-                        <extensions>true</extensions>
-                        <executions>
-                            <execution>
-                                <id>nexus-deploy</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>staging-deploy</goal>
-                                </goals>
-                                <configuration>
-                                    <repository>${nexus.repository.staging}</repository>
-                                    <tag>${nexus.staging.tag}</tag>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>gpg-sign</id>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
 
         <profile>
             <id>base.build</id>
@@ -2033,7 +1943,7 @@
                 <repository>
                     <id>jboss-staging-repository-group</id>
                     <name>JBoss Staging Repository Group</name>
-                    <url>https://repository.jboss.org/nexus/content/groups/staging/</url>
+                    <url>${nexus.repository.staging.url}</url>
                     <layout>default</layout>
                 </repository>
             </repositories>
@@ -2041,7 +1951,7 @@
                 <pluginRepository>
                     <id>jboss-staging-repository-group</id>
                     <name>JBoss Staging Repository Group</name>
-                    <url>https://repository.jboss.org/nexus/content/groups/staging/</url>
+                    <url>${nexus.repository.staging.url}</url>
                     <layout>default</layout>
                 </pluginRepository>
             </pluginRepositories>

@@ -649,18 +649,6 @@
             <!-- OpenTelemetry -->
 
             <dependency>
-                <groupId>io.perfmark</groupId>
-                <artifactId>perfmark-api</artifactId>
-                <version>${version.io.perfmark}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
                 <groupId>io.prometheus</groupId>
                 <artifactId>prometheus-metrics-exposition-formats</artifactId>
                 <version>${version.io.prometheus}</version>
@@ -1033,6 +1021,44 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>io.smallrye.stork</groupId>
+                <artifactId>stork-api</artifactId>
+                <version>${version.io.smallrye.smallrye-stork}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.smallrye.stork</groupId>
+                <artifactId>stork-core</artifactId>
+                <version>${version.io.smallrye.smallrye-stork}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>io.smallrye.stork</groupId>
+                <artifactId>stork-service-discovery-static-list</artifactId>
+                <version>${version.io.smallrye.smallrye-stork}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
 
             <dependency>
                 <groupId>io.vertx</groupId>
