@@ -61,14 +61,13 @@
         Maintain separation between the artifact id and the version to help prevent
         merge conflicts between commits changing the GA and those changing the V.
         -->
-        <version>37.0.0.Beta1-SNAPSHOT</version>
+        <version>39.0.0.Final-SNAPSHOT</version>
     </parent>
 
     <artifactId>wildfly-testsuite</artifactId>
     <packaging>pom</packaging>
 
     <name>WildFly Test Suite: Aggregator</name>
-
 
     <!-- Global testsuite system properties defaults. -->
 
@@ -167,6 +166,7 @@
              a location as is practical; no more coarse-grained than the global config of
              the pom for the maven module that includes the test. -->
         <modular.jdk.testsuite.args>${modular.jdk.args}</modular.jdk.testsuite.args>
+        <!-- n.b. any updates to line below need to be mirrored in testsuite/integration/clustering/pom.xml with omitted ${surefire.jpda.args} which must be unique per node! -->
         <surefire.system.args>${modular.jdk.testsuite.args} -Dorg.jboss.ejb.client.wildfly-testsuite-hack=true ${surefire.memory.args} ${surefire.jpda.args} -Djboss.dist=${jboss.dist} ${surefire.jacoco.args} -Dmaven.repo.local=${settings.localRepository}</surefire.system.args>
         <extra.server.jvm.args />
         <!-- needed for arquillian-byteman-extension -->
@@ -180,6 +180,7 @@
         
         <!-- Don't try to deploy the testsuite modules because they don't build jars -->
         <maven.deploy.skip>true</maven.deploy.skip>
+        <skipPublishing>${maven.deploy.skip}</skipPublishing>
 
         <!-- used to enable trace logging for test suite runs -->
         <trace>none</trace>
@@ -220,6 +221,21 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -382,6 +398,32 @@
                    <artifactId>maven-install-plugin</artifactId>
                    <executions><execution><id>default-install</id><phase>none</phase></execution></executions>
                </plugin>
+
+                <!-- Don't sign - nothing to do. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <configuration><skip>true</skip></configuration>
+                </plugin>
+
+                <!-- Don't deploy -->
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nxrm3-maven-plugin</artifactId>
+                    <configuration>
+                        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>injected-central-publishing</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -472,46 +514,17 @@
             Plugin execution configuration profiles. DO NOT ACTIVATE MODULES VIA THESE PROFILES
         -->
 
+        <!-- Settings applicable to all execution modes for testing WFP (ts.preview, -Dts.bootable.preview, -Dts.layers, -Dts.galleon) -->
         <profile>
-            <id>preview.profile</id>
-            <activation><property><name>ts.preview</name></property></activation>
+            <id>preview-server-tests-config</id>
+            <activation><property><name>preview-server-tests</name></property></activation>
             <properties>
+                <!-- Use the WFP dependencies -->
                 <dependency.management.import.artifact>wildfly-preview-expansion-bom</dependency.management.import.artifact>
                 <dependency.management.import.test.artifact>wildfly-preview-test-expansion-bom</dependency.management.import.test.artifact>
-                <!-- For WFP, if there are EE-version-specific test sources, uses the ee11 ones -->
-                <additional.ee.test.source>ee11</additional.ee.test.source>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>bootablejar.preview.profile</id>
-            <activation>
-                <property>
-                    <name>ts.bootable.preview</name>
-                </property>
-            </activation>
-            <properties>
-                <!-- For WFP, if there are EE-version-specific test sources, uses the ee11 ones -->
-                <additional.ee.test.source>ee11</additional.ee.test.source>
-            </properties>
-        </profile>
-        <!-- Profile that can be activated in combination with -Dts.layers and -Dts.galleon
-             to execute the tests activated by those profiles, but using the wildfly-preview feature pack
-             based variant of wildfly-test-galleon-pack.
-        -->
-        <profile>
-            <id>test.feature.pack.preview.profile</id>
-            <activation>
-                <property>
-                    <name>testsuite.ee.galleon.pack.artifactId</name>
-                    <value>wildfly-preview-feature-pack</value>
-                </property>
-            </activation>
-            <properties>
-                <dependency.management.import.artifact>wildfly-preview-expansion-bom</dependency.management.import.artifact>
-                <dependency.management.import.test.artifact>wildfly-preview-test-expansion-bom</dependency.management.import.test.artifact>
+                <!-- Use the WFP test-feature-pack -->
                 <testsuite.test.feature.pack.artifactId>wildfly-test-feature-pack-preview</testsuite.test.feature.pack.artifactId>
-                <!-- For WFP, if there are EE-version-specific test sources, uses the ee11 ones -->
+                <!-- If there are EE-version-specific test sources, uses the ee11 ones -->
                 <additional.ee.test.source>ee11</additional.ee.test.source>
             </properties>
         </profile>
@@ -521,14 +534,22 @@
         -->
         <profile>
             <id>jpda.profile</id>
-            <activation><property><name>jpda</name></property></activation>
+            <activation>
+                <property>
+                    <name>jpda</name>
+                </property>
+            </activation>
             <properties>
                 <surefire.jpda.args>-agentlib:jdwp=transport=dt_socket,address=*:${as.debug.port},server=y,suspend=y</surefire.jpda.args>
             </properties>
         </profile>
         <profile>
             <id>debug.profile</id>
-            <activation><property><name>debug</name></property></activation>
+            <activation>
+                <property>
+                    <name>debug</name>
+                </property>
+            </activation>
             <properties>
                 <surefire.jpda.args>-agentlib:jdwp=transport=dt_socket,address=*:${as.debug.port},server=y,suspend=y</surefire.jpda.args>
             </properties>
@@ -823,7 +844,7 @@
                 <ds.db>h2</ds.db>
                 <ds.jdbc.driver>org.h2.Driver</ds.jdbc.driver>
                 <ds.jdbc.driver-xa>org.h2.jdbcx.JdbcDataSource</ds.jdbc.driver-xa>
-                <ds.jdbc.url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</ds.jdbc.url>
+                <ds.jdbc.url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</ds.jdbc.url>
                 <ds.jdbc.driver.version>${version.com.h2database}</ds.jdbc.driver.version>
             </properties>
         </profile>
@@ -834,7 +855,7 @@
                 <ds.db>h2</ds.db>
                 <ds.jdbc.driver>org.h2.Driver</ds.jdbc.driver>
                 <ds.jdbc.driver-xa>org.h2.jdbcx.JdbcDataSource</ds.jdbc.driver-xa>
-                <ds.jdbc.url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</ds.jdbc.url>
+                <ds.jdbc.url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</ds.jdbc.url>
                 <ds.jdbc.driver.version>${version.com.h2database}</ds.jdbc.driver.version>
             </properties>
         </profile>

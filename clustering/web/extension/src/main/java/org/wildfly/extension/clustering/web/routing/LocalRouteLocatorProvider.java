@@ -5,11 +5,12 @@
 
 package org.wildfly.extension.clustering.web.routing;
 
-import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.wildfly.clustering.function.UnaryOperator;
-import org.wildfly.clustering.server.deployment.DeploymentConfiguration;
 import org.wildfly.clustering.server.service.BinaryServiceConfiguration;
+import org.wildfly.clustering.web.service.deployment.WebDeploymentConfiguration;
+import org.wildfly.clustering.web.service.deployment.WebDeploymentServiceDescriptor;
 import org.wildfly.clustering.web.service.routing.RouteLocatorProvider;
+import org.wildfly.service.Installer.StartWhen;
 import org.wildfly.subsystem.service.ServiceDependency;
 import org.wildfly.subsystem.service.ServiceInstaller;
 
@@ -19,8 +20,11 @@ import org.wildfly.subsystem.service.ServiceInstaller;
 public class LocalRouteLocatorProvider implements RouteLocatorProvider {
 
     @Override
-    public ServiceInstaller getServiceInstaller(DeploymentPhaseContext context, BinaryServiceConfiguration configuration, DeploymentConfiguration deployment) {
-        ServiceDependency<String> route = ServiceDependency.on(LocalRoutingProvider.LOCAL_ROUTE, deployment.getServerName());
-        return RouteLocatorProvider.builder(route.map(UnaryOperator::of), deployment).requires(route).build();
+    public ServiceInstaller getServiceInstaller(BinaryServiceConfiguration configuration, WebDeploymentConfiguration deployment) {
+        ServiceDependency<String> locator = ServiceDependency.on(LocalRoutingProvider.LOCAL_ROUTE, deployment.getServerName());
+        return ServiceInstaller.builder(locator.map(UnaryOperator::of))
+                .provides(WebDeploymentServiceDescriptor.ROUTE_LOCATOR.resolve(deployment.getDeploymentUnit()))
+                .startWhen(StartWhen.REQUIRED)
+                .build();
     }
 }

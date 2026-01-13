@@ -6,7 +6,7 @@ wildfly:
 
     - id: batch-jberet
       directories: [ batch-jberet ]
-      notify: [ liweinan ]
+      notify: [ jamezp ]
 
     - id: bean-validation
       directories: [ bean-validation ]
@@ -16,7 +16,9 @@ wildfly:
       directories: 
         - clustering
         - testsuite/integration/clustering
-      notify: [ pferraro ]
+      notify:
+        - pferraro
+        - rhusar
 
     - id: connector
       directories: [ connector ]
@@ -35,7 +37,7 @@ wildfly:
         - elytron-oidc-client
         - testsuite/integration/elytron
         - testsuite/integration/elytron-oidc-client
-      notify: [ fjuma ]
+      notify: []
 
     - id: health
       directories:
@@ -101,7 +103,7 @@ wildfly:
     - id: picketlink
       directories:
         - legacy/picketlink
-      notify: [ fjuma ]
+      notify: []
 
     - id: pojo
       directories: [ pojo ]
@@ -118,7 +120,7 @@ wildfly:
     - id: security
       directories:
         - legacy/security
-      notify: [ fjuma ]
+      notify: []
 
     - id: spec-api
       directories: [ spec-api ]
@@ -144,13 +146,13 @@ wildfly:
       directories:
         - microprofile/jwt-smallrye
         - testsuite/integration/microprofile-tck/jwt
-      notify: [ fjuma ]
+      notify: []
       
     - id: microprofile-lra
       directories:
         - microprofile/lra
         - testsuite/integration/microprofile-tck/lra
-      notify: [ xstefank ]
+      notify: [ xstefank, marcosgopen ]
       
     - id: microprofile-openapi
       directories:
@@ -199,7 +201,7 @@ wildfly:
     - id: testsuite-ws
       directories:
         - testsuite/integration/ws
-      notify: [ jimma ]
+      notify: [ ropalka ]
       
     - id: testsuite-mixed-domain
       directories:
@@ -215,15 +217,15 @@ wildfly:
 
     - id: undertow
       directories: [ undertow ]
-      notify: [ fl4via ]
+      notify: [ fl4via, ropalka ]
 
     - id: web-common
       directories: [ web-common ]
-      notify: [ pferraro, fl4via ]
+      notify: [ pferraro, fl4via, ropalka ]
 
     - id: webservices
       directories: [ webservices ]
-      notify: [ jimma ]
+      notify: [ ropalka ]
 
     - id: weld
       directories: [ weld ]

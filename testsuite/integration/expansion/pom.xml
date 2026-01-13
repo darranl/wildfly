@@ -17,7 +17,7 @@
         Maintain separation between the artifact id and the version to help prevent
         merge conflicts between commits changing the GA and those changing the V.
         -->
-        <version>37.0.0.Beta1-SNAPSHOT</version>
+        <version>39.0.0.Final-SNAPSHOT</version>
     </parent>
 
     <artifactId>wildfly-ts-integ-expansion</artifactId>
@@ -133,6 +133,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.mvc</groupId>
+            <artifactId>jakarta.mvc-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <scope>provided</scope>
@@ -150,6 +155,13 @@
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Jakarta MVC test dependencies -->
+        <dependency>
+            <groupId>org.eclipse.krazo</groupId>
+            <artifactId>krazo-core</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -220,7 +232,7 @@
             <scope>test</scope>
         </dependency>
         <!--
-            smallrye-reactive-messaging-kafka-test-companion doesn't pull in the kafka server dependencies
+            smallrye-reactive-messaging-kafka-test-companion doesn't pull in the kafka server dependencies,
             so we need to add them here
         -->
         <dependency>
@@ -284,7 +296,7 @@
         </dependency>
         <dependency>
             <!-- Needed if people use compression.type=lz4 in their Kafka config -->
-            <groupId>org.lz4</groupId>
+            <groupId>at.yawk.lz4</groupId>
             <artifactId>lz4-java</artifactId>
             <scope>test</scope>
         </dependency>
@@ -394,7 +406,12 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>kafka</artifactId>
+            <artifactId>testcontainers-kafka</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.security</groupId>
+            <artifactId>wildfly-elytron-x500-cert</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -428,7 +445,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.arquillian</groupId>
+            <groupId>org.arquillian.testcontainers</groupId>
             <artifactId>arquillian-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
@@ -465,7 +482,7 @@
                             <expected-errors>
                                 <error>jakarta.naming.Context or InitialContext lookup. Enable verbose output to see the locations.</error>
                             </expected-errors>
-                            <expected-discovery>[cdi, ee-integration, ejb, ejb-lite, h2-datasource, jaxrs, jpa, jsonp, micrometer, microprofile-config, microprofile-fault-tolerance, microprofile-health, microprofile-jwt, microprofile-lra-coordinator, microprofile-lra-participant, microprofile-openapi, microprofile-reactive-messaging, microprofile-reactive-messaging-amqp, microprofile-reactive-messaging-kafka, microprofile-reactive-streams-operators, microprofile-rest-client, microprofile-telemetry, naming, opentelemetry, transactions]==>ee-core-profile-server,ejb,h2-datasource,jpa,micrometer,microprofile-fault-tolerance,microprofile-health,microprofile-jwt,microprofile-lra-coordinator,microprofile-lra-participant,microprofile-openapi,microprofile-reactive-messaging-amqp,microprofile-reactive-messaging-kafka,microprofile-rest-client,microprofile-telemetry</expected-discovery>
+                            <expected-discovery>[cdi, ee-integration, ejb, ejb-lite, h2-datasource, jaxrs, jpa, jsonp, micrometer, microprofile-config, microprofile-fault-tolerance, microprofile-health, microprofile-jwt, microprofile-lra-coordinator, microprofile-lra-participant, microprofile-openapi, microprofile-reactive-messaging, microprofile-reactive-messaging-amqp, microprofile-reactive-messaging-kafka, microprofile-reactive-streams-operators, microprofile-rest-client, microprofile-telemetry, mvc-krazo, naming, opentelemetry, transactions]==>ee-core-profile-server,ejb,h2-datasource,jpa,micrometer,microprofile-fault-tolerance,microprofile-health,microprofile-jwt,microprofile-lra-coordinator,microprofile-lra-participant,microprofile-openapi,microprofile-reactive-messaging-amqp,microprofile-reactive-messaging-kafka,microprofile-rest-client,microprofile-telemetry,mvc-krazo</expected-discovery>
                         </configuration>
                     </execution>
                 </executions>
@@ -657,6 +674,11 @@
                                 <phase>test</phase>
                                 <configuration>
                                     <reportNameSuffix>layers-test</reportNameSuffix>
+                                    <excludes combine-children="append">
+                                        <!-- https://issues.redhat.com/browse/WFMP-313 prevent provisioning preview stability packages
+                                             so don't run the mvc tests -->
+                                        <exclude>org/wildfly/test/integration/mvc/**</exclude>
+                                    </excludes>
                                 </configuration>
                             </execution>
                             <execution>
@@ -746,6 +768,7 @@
                                         <jboss-maven-dist/>
                                         <jboss-fork-embedded>${galleon.fork.embedded}</jboss-fork-embedded>
                                         <optional-packages>passive+</optional-packages>
+                                        <stability-level>preview</stability-level>
                                     </galleon-options>
                                     <provisioning-file>target/glow-scan/provisioning.xml</provisioning-file>
                                 </configuration>
@@ -943,6 +966,11 @@
                                             org.wildfly.arquillian:wildfly-arquillian-container-managed
                                         </classpathDependencyExclude>
                                     </classpathDependencyExcludes>
+                                    <excludes combine-children="append">
+                                        <!-- https://issues.redhat.com/browse/WFMP-313 prevent provisioning preview stability packages
+                                             so don't run the mvc tests -->
+                                        <exclude>org/wildfly/test/integration/mvc/**</exclude>
+                                    </excludes>
                                 </configuration>
                             </execution>
                             <execution>

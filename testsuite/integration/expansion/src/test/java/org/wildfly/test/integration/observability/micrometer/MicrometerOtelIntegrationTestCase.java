@@ -14,23 +14,21 @@ import java.util.stream.Collectors;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
+import org.arquillian.testcontainers.api.Testcontainer;
+import org.arquillian.testcontainers.api.TestcontainersRequired;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.arquillian.testcontainers.api.TestcontainersRequired;
-import org.jboss.arquillian.testcontainers.api.Testcontainer;
 import org.jboss.as.arquillian.api.ServerSetup;
 import org.jboss.as.test.shared.observability.containers.OpenTelemetryCollectorContainer;
 import org.jboss.as.test.shared.observability.setuptasks.MicrometerSetupTask;
 import org.jboss.as.test.shared.observability.signals.PrometheusMetric;
-import org.jboss.as.test.shared.util.AssumeTestGroupUtil;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.test.integration.observability.JaxRsActivator;
@@ -55,14 +53,6 @@ public class MicrometerOtelIntegrationTestCase {
                 .addClasses(JaxRsActivator.class, MicrometerResource.class);
     }
 
-    // The @ServerSetup(MicrometerSetupTask.class) requires Docker to be available.
-    // Otherwise the org.wildfly.extension.micrometer.registry.NoOpRegistry is installed which will result in 0 counters,
-    // and cause the test fail seemingly intermittently on machines with broken Docker setup.
-    @BeforeClass
-    public static void checkForDocker() {
-        AssumeTestGroupUtil.assumeDockerAvailable();
-    }
-
     @Test
     @InSequence(1)
     public void makeRequests() throws URISyntaxException {
@@ -80,13 +70,16 @@ public class MicrometerOtelIntegrationTestCase {
     @InSequence(4)
     public void getMetrics() throws InterruptedException {
         List<String> metricsToTest = Arrays.asList(
+                "classloader_loaded_classes_count",
+                "cpu_available_processors",
+                "cpu_system_load_average",
                 "demo_counter",
                 "demo_timer",
-                "memory_used_heap",
-                "cpu_available_processors",
-                "classloader_loaded_classes_count",
-                "cpu_system_load_average",
                 "gc_time",
+                "jvm_classes_loaded",
+                "memory_commited_heap_bytes",
+                "memory_used_heap",
+                "system_cpu_count",
                 "thread_count",
                 "undertow_bytes_received"
         );

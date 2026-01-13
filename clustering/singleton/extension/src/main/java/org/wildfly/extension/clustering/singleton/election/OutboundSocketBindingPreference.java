@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 import java.util.function.Predicate;
 
 import org.infinispan.remoting.transport.Address;
-import org.infinispan.remoting.transport.jgroups.JGroupsAddress;
 import org.jboss.as.network.OutboundSocketBinding;
 import org.jgroups.Event;
 import org.jgroups.JChannel;
@@ -36,9 +35,9 @@ public class OutboundSocketBindingPreference implements Predicate<GroupMember> {
     public boolean test(GroupMember member) {
         if (member instanceof CacheContainerGroupMember) {
             CacheContainerGroupMember infinispanMember = (CacheContainerGroupMember) member;
-            Address infinispanAddress = infinispanMember.getAddress();
-            if (infinispanAddress instanceof JGroupsAddress) {
-                org.jgroups.Address address = ((JGroupsAddress) infinispanAddress).getJGroupsAddress();
+            Address infinispanAddress = infinispanMember.getId();
+            if (infinispanAddress != Address.LOCAL) {
+                org.jgroups.Address address = Address.toExtendedUUID(infinispanAddress);
                 IpAddress physicalAddress = (IpAddress) this.channel.down(new Event(Event.GET_PHYSICAL_ADDRESS, address));
                 // Physical address might be null if node is no longer a member of the cluster
                 if (physicalAddress != null) {

@@ -6,23 +6,24 @@ package org.wildfly.clustering.web.undertow.session;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.CompletionException;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Predicate;
 
 import jakarta.servlet.ServletContext;
 
 import org.wildfly.clustering.cache.batch.BatchContextualizerFactory;
 import org.wildfly.clustering.context.Contextualizer;
 import org.wildfly.clustering.context.ContextualizerFactory;
+import org.wildfly.clustering.function.Consumer;
+import org.wildfly.clustering.function.Supplier;
 import org.wildfly.clustering.session.ImmutableSession;
 import org.wildfly.clustering.session.SessionManager;
 import org.wildfly.clustering.session.SessionManagerConfiguration;
 import org.wildfly.clustering.session.SessionManagerFactory;
 import org.wildfly.clustering.web.container.SessionManagerFactoryConfiguration;
-import org.wildfly.clustering.web.undertow.IdentifierFactoryAdapter;
 
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.session.SessionListeners;
@@ -35,6 +36,7 @@ import io.undertow.servlet.api.ThreadSetupHandler;
  * @author Paul Ferraro
  */
 public class DistributableSessionManagerFactory implements io.undertow.servlet.api.SessionManagerFactory {
+    private static final Predicate<Duration> MORTAL = Predicate.not(Duration::isNegative).and(Predicate.not(Duration::isZero));
     private static final ContextualizerFactory BATCH_CONTEXTUALIZER_FACTORY = ServiceLoader.load(BatchContextualizerFactory.class, BatchContextualizerFactory.class.getClassLoader()).findFirst().orElseThrow();
 
     private final SessionManagerFactory<ServletContext, Map<String, Object>> factory;
@@ -46,11 +48,11 @@ public class DistributableSessionManagerFactory implements io.undertow.servlet.a
     }
 
     @Override
-    public io.undertow.server.session.SessionManager createSessionManager(final Deployment deployment) {
+    public UndertowSessionManager createSessionManager(final Deployment deployment) {
         DeploymentInfo info = deployment.getDeploymentInfo();
         boolean statisticsEnabled = info.getMetricsCollector() != null;
         RecordableInactiveSessionStatistics inactiveSessionStatistics = statisticsEnabled ? new DistributableInactiveSessionStatistics() : null;
-        Supplier<String> factory = new IdentifierFactoryAdapter(info.getSessionIdGenerator());
+        Supplier<String> factory = info.getSessionIdGenerator()::createSessionId;
         // Session listeners are application-specific
         SessionListeners listeners = new SessionListeners();
         Consumer<ImmutableSession> expirationListener = new UndertowSessionExpirationListener(deployment, listeners, inactiveSessionStatistics);
@@ -71,8 +73,8 @@ public class DistributableSessionManagerFactory implements io.undertow.servlet.a
             }
 
             @Override
-            public Duration getTimeout() {
-                return Duration.ofMinutes(this.getContext().getSessionTimeout());
+            public Optional<Duration> getMaxIdle() {
+                return Optional.of(Duration.ofMinutes(this.getContext().getSessionTimeout())).filter(MORTAL);
             }
         };
         SessionManager<Map<String, Object>> manager = this.factory.createSessionManager(configuration);
@@ -109,7 +111,7 @@ public class DistributableSessionManagerFactory implements io.undertow.servlet.a
             }
         });
         RecordableSessionManagerStatistics statistics = (inactiveSessionStatistics != null) ? new DistributableSessionManagerStatistics(manager.getStatistics(), inactiveSessionStatistics, this.config.getMaxActiveSessions()) : null;
-        io.undertow.server.session.SessionManager result = new DistributableSessionManager(new DistributableSessionManagerConfiguration() {
+        UndertowSessionManager result = new DistributableSessionManager(new DistributableSessionManagerConfiguration() {
             @Override
             public String getDeploymentName() {
                 return info.getDeploymentName();

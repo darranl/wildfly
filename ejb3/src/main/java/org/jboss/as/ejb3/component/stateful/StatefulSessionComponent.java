@@ -11,8 +11,8 @@ import java.security.PrivilegedAction;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 import jakarta.ejb.ConcurrentAccessException;
 import jakarta.ejb.ConcurrentAccessTimeoutException;
@@ -51,6 +51,7 @@ import org.jboss.invocation.InterceptorFactory;
 import org.jboss.invocation.InterceptorFactoryContext;
 import org.jboss.msc.service.ServiceContainer;
 import org.jboss.msc.service.ServiceController;
+import org.wildfly.clustering.function.Supplier;
 import org.wildfly.extension.requestcontroller.ControlPoint;
 import org.wildfly.extension.requestcontroller.RunResult;
 import org.wildfly.security.manager.WildFlySecurityManager;
@@ -88,7 +89,7 @@ public class StatefulSessionComponent extends SessionBeanComponent implements St
     private Interceptor postActivateInterceptor;
     private final Map<EJBBusinessMethod, AccessTimeoutDetails> methodAccessTimeouts;
     private final DefaultAccessTimeoutService defaultAccessTimeoutProvider;
-    private final Supplier<StatefulSessionBeanCacheFactory<SessionID, StatefulSessionComponentInstance>> cacheFactory;
+    private final java.util.function.Supplier<StatefulSessionBeanCacheFactory<SessionID, StatefulSessionComponentInstance>> cacheFactory;
     private final InterceptorFactory ejb2XRemoveMethod;
     private Interceptor ejb2XRemoveMethodInterceptor;
 
@@ -309,6 +310,8 @@ public class StatefulSessionComponent extends SessionBeanComponent implements St
     public synchronized void init() {
         super.init();
 
+        StatefulComponentDescription description = (StatefulComponentDescription) this.getComponentDescription();
+        Optional<Duration> maxIdle = Optional.ofNullable(description.getStatefulTimeout()).map(StatefulTimeoutInfo::get);
         this.cache = this.cacheFactory.get().createStatefulBeanCache(new StatefulSessionBeanCacheConfiguration<>() {
             @Override
             public StatefulSessionBeanInstanceFactory<StatefulSessionComponentInstance> getInstanceFactory() {
@@ -321,10 +324,8 @@ public class StatefulSessionComponent extends SessionBeanComponent implements St
             }
 
             @Override
-            public Duration getTimeout() {
-                StatefulComponentDescription description = (StatefulComponentDescription) StatefulSessionComponent.this.getComponentDescription();
-                StatefulTimeoutInfo info = description.getStatefulTimeout();
-                return (info != null && info.getValue() >= 0) ? Duration.of(info.getValue(), info.getTimeUnit().toChronoUnit()) : null;
+            public Optional<Duration> getMaxIdle() {
+                return maxIdle;
             }
 
             @Override
@@ -360,7 +361,9 @@ public class StatefulSessionComponent extends SessionBeanComponent implements St
 
     @Override
     public void done() {
-        this.cache.stop();
+        try (StatefulSessionBeanCache<SessionID, StatefulSessionComponentInstance> cache = this.cache) {
+            cache.stop();
+        }
 
         cache = null;
         afterBeginInterceptor = null;

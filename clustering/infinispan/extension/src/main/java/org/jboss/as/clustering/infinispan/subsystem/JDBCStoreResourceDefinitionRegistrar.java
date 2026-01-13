@@ -19,7 +19,6 @@ import org.infinispan.persistence.jdbc.configuration.TableManipulationConfigurat
 import org.infinispan.persistence.keymappers.TwoWayKey2StringMapper;
 import org.jboss.as.clustering.controller.CommonServiceDescriptor;
 import org.jboss.as.clustering.controller.EnumAttributeDefinition;
-import org.jboss.as.clustering.infinispan.persistence.jdbc.DataSourceConnectionFactoryConfigurationBuilder;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.PathAddress;
@@ -27,6 +26,7 @@ import org.jboss.as.controller.RequirementServiceBuilder;
 import org.jboss.as.controller.ResourceRegistration;
 import org.jboss.as.controller.registry.ManagementResourceRegistration;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.clustering.cache.infinispan.persistence.jdbc.DataSourceConnectionFactoryConfigurationBuilder;
 import org.wildfly.clustering.server.service.BinaryServiceConfiguration;
 import org.wildfly.subsystem.resource.ManagementResourceRegistrationContext;
 import org.wildfly.subsystem.resource.ResourceDescriptor;
@@ -69,11 +69,8 @@ public class JDBCStoreResourceDefinitionRegistrar extends StoreResourceDefinitio
 
                     @Override
                     public JdbcStringBasedStoreConfigurationBuilder get() {
-                        JdbcStringBasedStoreConfigurationBuilder builder = new ConfigurationBuilder().persistence().addStore(JdbcStringBasedStoreConfigurationBuilder.class)
-                                .segmented(true)
-                                .transactional(false)
-                                .dialect(dialect);
-                        builder.connectionFactory(DataSourceConnectionFactoryConfigurationBuilder.class).setDataSource(dataSource.get());
+                        JdbcStringBasedStoreConfigurationBuilder builder = new ConfigurationBuilder().persistence().addStore(JdbcStringBasedStoreConfigurationBuilder.class).dialect(dialect);
+                        builder.connectionFactory(DataSourceConnectionFactoryConfigurationBuilder.class).withDataSource(dataSource.get());
                         builder.table().read(table.get());
                         ServiceLoader.load(TwoWayKey2StringMapper.class, loader.get()).findFirst().map(TwoWayKey2StringMapper::getClass).ifPresent(builder::key2StringMapper);
                         return builder;

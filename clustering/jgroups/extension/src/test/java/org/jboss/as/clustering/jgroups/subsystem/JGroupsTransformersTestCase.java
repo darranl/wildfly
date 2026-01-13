@@ -37,9 +37,11 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class JGroupsTransformersTestCase extends AbstractSubsystemTest {
     private static final Map<ModelTestControllerVersion, JGroupsSubsystemModel> VERSIONS = new EnumMap<>(ModelTestControllerVersion.class);
+
     static {
         VERSIONS.put(ModelTestControllerVersion.EAP_7_4_0, JGroupsSubsystemModel.VERSION_8_0_0);
         VERSIONS.put(ModelTestControllerVersion.EAP_8_0_0, JGroupsSubsystemModel.VERSION_10_0_0);
+        VERSIONS.put(ModelTestControllerVersion.EAP_8_1_0, JGroupsSubsystemModel.VERSION_10_0_0);
     }
 
     @Parameters
@@ -57,33 +59,33 @@ public class JGroupsTransformersTestCase extends AbstractSubsystemTest {
     }
 
     private String[] getDependencies() {
-        switch (this.controllerVersion) {
-            case EAP_7_4_0:
-                return new String[] {
-                        this.formatArtifact("wildfly-clustering-jgroups-extension"),
-                        this.formatArtifact("wildfly-clustering-api"),
-                        this.formatArtifact("wildfly-clustering-common"),
-                        this.formatArtifact("wildfly-clustering-jgroups-spi"),
-                        this.formatArtifact("wildfly-clustering-server"),
-                        this.formatArtifact("wildfly-clustering-service"),
-                        this.formatArtifact("wildfly-clustering-spi"),
-                };
-            case EAP_8_0_0:
-                return new String[] {
-                        this.formatArtifact("wildfly-clustering-jgroups-extension"),
-                        this.formatArtifact("wildfly-clustering-common"),
-                        this.formatArtifact("wildfly-clustering-jgroups-spi"),
-                        this.formatArtifact("wildfly-clustering-server-service"),
-                        this.formatArtifact("wildfly-clustering-server-spi"),
-                        this.formatArtifact("wildfly-clustering-service"),
-                };
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    private String formatArtifact(String artifactId) {
-        return String.format("%s:%s:%s", this.controllerVersion.getMavenGroupId(), artifactId, this.controllerVersion.getMavenGavVersion());
+        return switch (this.controllerVersion) {
+            case EAP_7_4_0 -> new String[] {
+                    this.controllerVersion.createGAV("wildfly-clustering-jgroups-extension"),
+                    this.controllerVersion.createGAV("wildfly-clustering-api"),
+                    this.controllerVersion.createGAV("wildfly-clustering-common"),
+                    this.controllerVersion.createGAV("wildfly-clustering-jgroups-spi"),
+                    this.controllerVersion.createGAV("wildfly-clustering-server"),
+                    this.controllerVersion.createGAV("wildfly-clustering-service"),
+                    this.controllerVersion.createGAV("wildfly-clustering-spi"),
+            };
+            case EAP_8_0_0 -> new String[] {
+                    this.controllerVersion.createGAV("wildfly-clustering-jgroups-extension"),
+                    this.controllerVersion.createGAV("wildfly-clustering-common"),
+                    this.controllerVersion.createGAV("wildfly-clustering-jgroups-spi"),
+                    this.controllerVersion.createGAV("wildfly-clustering-server-service"),
+                    this.controllerVersion.createGAV("wildfly-clustering-server-spi"),
+                    this.controllerVersion.createGAV("wildfly-clustering-service"),
+            };
+            case EAP_8_1_0 -> new String[] {
+                    this.controllerVersion.createGAV("wildfly-clustering-jgroups-extension"),
+                    this.controllerVersion.createGAV("wildfly-clustering-common"),
+                    this.controllerVersion.createGAV("wildfly-clustering-jgroups-spi"),
+                    this.controllerVersion.createGAV("wildfly-clustering-server-service"),
+                    this.controllerVersion.createCoreGAV("wildfly-subsystem"),
+            };
+            default -> throw new IllegalArgumentException();
+        };
     }
 
     private static AdditionalInitialization createAdditionalInitialization() {
@@ -91,6 +93,7 @@ public class JGroupsTransformersTestCase extends AbstractSubsystemTest {
                 .require(SocketBinding.SERVICE_DESCRIPTOR, List.of("jgroups-tcp", "jgroups-udp", "jgroups-udp-fd", "some-binding", "client-binding", "jgroups-diagnostics", "jgroups-mping", "jgroups-tcp-fd", "jgroups-client-fd", "jgroups-state-xfr"))
                 .require(CommonServiceDescriptor.KEY_STORE, "my-key-store")
                 .require(CommonServiceDescriptor.CREDENTIAL_STORE, "my-credential-store")
+                .require(CommonServiceDescriptor.SSL_CONTEXT, List.of("my-client-ssl-context", "my-server-ssl-context"))
                 ;
     }
 
@@ -139,6 +142,13 @@ public class JGroupsTransformersTestCase extends AbstractSubsystemTest {
 
         if (JGroupsSubsystemModel.VERSION_8_0_0.requiresTransformation(this.subsystemVersion)) {
             config.addFailedAttribute(subsystemAddress.append(JGroupsResourceRegistration.STACK.pathElement("credentialReference1")).append(StackResourceDefinitionRegistrar.Component.PROTOCOL.pathElement("SYM_ENCRYPT")), FailedOperationTransformationConfig.REJECTED_RESOURCE);
+        }
+
+        if (JGroupsSubsystemModel.VERSION_11_0_0.requiresTransformation(this.subsystemVersion)) {
+            PathAddress addr = subsystemAddress.append(JGroupsResourceRegistration.STACK.pathElement("maximal")).append(SocketTransportResourceDefinitionRegistrar.Transport.TCP.getPathElement());
+            config.addFailedAttribute(addr,
+                    new FailedOperationTransformationConfig.NewAttributesConfig(SocketTransportResourceDefinitionRegistrar.CLIENT_SSL_CONTEXT, SocketTransportResourceDefinitionRegistrar.SERVER_SSL_CONTEXT)
+            );
         }
 
         List<ModelNode> operations = builder.parseXmlResource("jgroups-reject.xml");

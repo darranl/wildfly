@@ -6,16 +6,15 @@
 package org.wildfly.test.integration.microprofile.faulttolerance.opentelemetry;
 
 import java.net.URL;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import org.arquillian.testcontainers.api.Testcontainer;
+import org.arquillian.testcontainers.api.TestcontainersRequired;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.arquillian.testcontainers.api.TestcontainersRequired;
-import org.jboss.arquillian.testcontainers.api.Testcontainer;
 import org.jboss.as.arquillian.api.ServerSetup;
 import org.jboss.as.test.integration.common.HttpRequest;
 import org.jboss.as.test.shared.observability.containers.OpenTelemetryCollectorContainer;
@@ -50,8 +49,8 @@ public class FaultToleranceOpenTelemetryIntegrationTestCase {
     protected OpenTelemetryCollectorContainer otelCollector;
 
     private static final String MP_CONFIG = "otel.sdk.disabled=false\n" +
-            // Lower the interval from 60 seconds to 100 millis
-            "otel.metric.export.interval=100";
+            // Lower the interval from 60 seconds to 2 seconds
+            "otel.metric.export.interval=2000";
 
     @Deployment(testable = false)
     public static Archive<?> deploy() {
@@ -100,7 +99,7 @@ public class FaultToleranceOpenTelemetryIntegrationTestCase {
                     .findFirst();
             Assert.assertTrue(prometheusMetric.isPresent());
             Assert.assertEquals(0, Integer.parseInt(prometheusMetric.get().getValue()), 0);
-        }, Duration.ofSeconds(70)); // n.b. this in ~2% of cases needs slightly more time on our CI given the asynchronicity
+        });
     }
 
 }

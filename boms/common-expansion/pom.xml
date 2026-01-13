@@ -17,7 +17,7 @@
         Maintain separation between the artifact id and the version to help prevent
         merge conflicts between commits changing the GA and those changing the V.
         -->
-        <version>37.0.0.Beta1-SNAPSHOT</version>
+        <version>39.0.0.Final-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -152,7 +152,29 @@
             </dependency>
             <dependency>
                 <groupId>${full.maven.groupId}</groupId>
-                <artifactId>wildfly-microprofile-openapi-smallrye</artifactId>
+                <artifactId>wildfly-microprofile-openapi-smallrye-extension</artifactId>
+                <version>${full.maven.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>${full.maven.groupId}</groupId>
+                <artifactId>wildfly-microprofile-openapi-smallrye-host</artifactId>
+                <version>${full.maven.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>${full.maven.groupId}</groupId>
+                <artifactId>wildfly-microprofile-openapi-smallrye-spi</artifactId>
                 <version>${full.maven.version}</version>
                 <exclusions>
                     <exclusion>
@@ -413,18 +435,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-codec-http2</artifactId>
-                <version>${version.io.netty}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>*</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <!-- OpenTelemetry -->
             <dependency>
                 <groupId>io.opentelemetry</groupId>
@@ -646,12 +656,10 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- OpenTelemetry -->
-
             <dependency>
-                <groupId>io.perfmark</groupId>
-                <artifactId>perfmark-api</artifactId>
-                <version>${version.io.perfmark}</version>
+                <groupId>io.opentelemetry.semconv</groupId>
+                <artifactId>opentelemetry-semconv-incubating</artifactId>
+                <version>${version.io.opentelemetry.opentelemetry-semconv}-alpha</version>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>
@@ -659,6 +667,8 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <!-- OpenTelemetry -->
 
             <dependency>
                 <groupId>io.prometheus</groupId>
@@ -797,37 +807,6 @@
                 <groupId>io.smallrye</groupId>
                 <artifactId>smallrye-open-api-model</artifactId>
                 <version>${version.io.smallrye.open-api}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.smallrye.common</groupId>
-                <artifactId>smallrye-common-annotation</artifactId>
-                <version>${version.io.smallrye.smallrye-common}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.smallrye.common</groupId>
-                <artifactId>smallrye-common-classloader</artifactId>
-                <version>${version.io.smallrye.smallrye-common}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.smallrye.common</groupId>
-                <artifactId>smallrye-common-constraint</artifactId>
-                <version>${version.io.smallrye.smallrye-common}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.smallrye.common</groupId>
-                <artifactId>smallrye-common-expression</artifactId>
-                <version>${version.io.smallrye.smallrye-common}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.smallrye.common</groupId>
-                <artifactId>smallrye-common-function</artifactId>
-                <version>${version.io.smallrye.smallrye-common}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.smallrye.common</groupId>
-                <artifactId>smallrye-common-vertx-context</artifactId>
-                <version>${version.io.smallrye.smallrye-common}</version>
             </dependency>
 
             <dependency>
@@ -1064,6 +1043,44 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>io.smallrye.stork</groupId>
+                <artifactId>stork-api</artifactId>
+                <version>${version.io.smallrye.smallrye-stork}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.smallrye.stork</groupId>
+                <artifactId>stork-core</artifactId>
+                <version>${version.io.smallrye.smallrye-stork}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>io.smallrye.stork</groupId>
+                <artifactId>stork-service-discovery-static-list</artifactId>
+                <version>${version.io.smallrye.smallrye-stork}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
 
             <dependency>
                 <groupId>io.vertx</groupId>
@@ -1401,9 +1418,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.lz4</groupId>
+                <groupId>at.yawk.lz4</groupId>
                 <artifactId>lz4-java</artifactId>
-                <version>${version.org.lz4.lz4-java}</version>
+                <version>${version.at.yawk.lz4.lz4-java}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>

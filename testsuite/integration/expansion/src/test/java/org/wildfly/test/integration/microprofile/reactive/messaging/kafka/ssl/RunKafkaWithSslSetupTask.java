@@ -13,10 +13,12 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
+import org.arquillian.testcontainers.api.TestcontainersRequired;
 import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
-import org.jboss.arquillian.testcontainers.api.TestcontainersRequired;
 import org.jboss.as.arquillian.api.ServerSetupTask;
 import org.jboss.as.arquillian.container.ManagementClient;
+import org.jboss.as.test.config.ContainerConfig;
+import org.jboss.as.test.shared.IntermittentFailure;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
@@ -35,13 +37,13 @@ public class RunKafkaWithSslSetupTask implements ServerSetupTask {
     public void setup(ManagementClient managementClient, String s) throws Exception {
         try {
             KeystoreUtil.createKeystores();
-            String kafkaVersion = WildFlySecurityManager.getPropertyPrivileged("wildfly.test.kafka.version", null);
+            String kafkaVersion = ContainerConfig.KAFKA.getImageVersion() != null ? ContainerConfig.KAFKA.getImageVersion() : WildFlySecurityManager.getPropertyPrivileged("wildfly.test.kafka.version", null);
             if (kafkaVersion == null) {
                 throw new IllegalArgumentException("Specify Kafka version with -Dwildfly.test.kafka.version");
             }
 
             // The KafkaContainer class doesn't play nicely when trying to make it use SSL
-            container = new GenericContainer("apache/kafka-native:" + kafkaVersion);
+            container = new GenericContainer(ContainerConfig.KAFKA.getImageName() + ":" + kafkaVersion);
             container.setPortBindings(Arrays.asList("9092:9092", "19092:19092"));
             container.withCopyFileToContainer(
                     MountableFile.forHostPath(Path.of("src/test/resources/org/wildfly/test/integration/microprofile/reactive/messaging/kafka/ssl/server.properties")),
@@ -58,7 +60,14 @@ public class RunKafkaWithSslSetupTask implements ServerSetupTask {
 //            // Set env vars which don't seem to have any effect when only in server.properties
             container.addEnv("KAFKA_CONTROLLER_QUORUM_VOTERS", "1@localhost:29093");
 
-            container.start();
+            try {
+                container.start();
+            } catch (Exception e) {
+                // Either throw AssumptionViolatedException because we are ignoring intermittent failures,
+                // or propagate the exception and fail
+                IntermittentFailure.thisTestIsFailingIntermittently("https://issues.redhat.com/browse/WFLY-20945");
+                throw e;
+            }
 
             companion = new KafkaCompanion("INTERNAL://localhost:19092");
             companion.topics().createAndWait("testing", 1, Duration.of(10, ChronoUnit.SECONDS));
