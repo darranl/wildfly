@@ -1179,7 +1179,9 @@ public class UndertowDeploymentInfoService implements Service<DeploymentInfo> {
             authenticationManager.configure(deploymentInfo);
         }
 
-        deploymentInfo.addOuterHandlerChainWrapper(JACCContextIdHandler.wrapper(jaccContextId));
+        // TODO - Is the ThreadSetupAction sufficient for all requests?
+        deploymentInfo.addThreadSetupAction(JACCContextIdHandler.threadSetupHandler(jaccContextId));
+        deploymentInfo.addOuterHandlerChainWrapper(JACCContextIdHandler.handlerWrapper(jaccContextId));
         if(mergedMetaData.isUseJBossAuthorization()) {
             UndertowLogger.ROOT_LOGGER.configurationOptionIgnoredWhenUsingElytron("use-jboss-authorization");
         }
